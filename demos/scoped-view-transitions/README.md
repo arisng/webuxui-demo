@@ -1,13 +1,15 @@
-# Scoped View Transitions Demo
+# Mobile Scoped View Transitions Demo
 
-This demo showcases the Scoped View Transitions API, a new CSS feature in Chrome 140+ that allows for simultaneous, isolated animations within specific DOM subtrees.
+This demo showcases Scoped View Transitions in a realistic mobile social media feed scenario, highlighting simultaneous, isolated animations for individual posts and navigation.
 
 ## Features
 
-- **Scoped Transitions**: Each section (nav, sidebar, content, footer) has its own transition scope with unique animations.
-- **Simultaneous Animations**: Multiple transitions can run at the same time without interfering, showcasing isolation.
-- **Impressive Effects**: Bounce slides, rotations, scaling, and flips for a dynamic demo.
-- **Progressive Enhancement**: Falls back to manual opacity transitions if the API is not supported.
+- **Mobile-First Design**: Responsive layout optimized for mobile devices with touch-friendly interactions.
+- **Social Feed Simulation**: Mock social media posts that update independently with scoped transitions.
+- **Individual Post Updates**: Each post card transitions uniquely when interacted with (like, comment, share).
+- **Bottom Navigation**: Tab switching with smooth scoped transitions.
+- **Simultaneous Isolation**: Multiple posts can update at the same time without interference.
+- **Progressive Enhancement**: Falls back to manual opacity fades if the API is not supported.
 
 ## Setup
 
@@ -17,12 +19,17 @@ This demo showcases the Scoped View Transitions API, a new CSS feature in Chrome
 
 ## Usage
 
-- Click "Update Nav" for bouncy slide transition.
-- Click "Update Sidebar" for rotating transition.
-- Click "Update Content" for scaling fade transition.
-- Click "Update Footer" for flip transition.
-- Click "Update All" to trigger all transitions simultaneously.
-- Click "Reset" to return to original state with simultaneous transitions.
+- **Post Interactions**: Click "Like +1", "Comment", or "Share" on each post to see individual scoped transitions updating the content.
+- **Navigation**: Tap bottom nav items (Home, Search, Profile) to switch tabs with smooth transitions.
+- **Auto-Update**: The header updates automatically after 2 seconds to demonstrate background transitions.
+
+## Real-Life Use Cases
+
+- **Social Media Feeds**: Updating like counts, comments, or shares on individual posts.
+- **News Apps**: Refreshing article cards with new data.
+- **Messaging Apps**: Updating conversation threads or status indicators.
+- **E-commerce**: Product cards updating prices or availability.
+- **Dashboard Apps**: Real-time data updates in widgets.
 
 ## Browser Support
 

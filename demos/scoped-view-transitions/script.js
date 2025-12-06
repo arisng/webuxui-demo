@@ -7,11 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const footer = document.getElementById('footer');
 
     // Fallback function for manual transitions
-    function manualTransition(element, newHTML, duration = 500) {
-        element.style.transition = `opacity ${duration}ms ease-in-out`;
+    function manualTransition(element, callback, duration = 600) {
+        element.style.transition = `opacity ${duration}ms ease-out`;
         element.style.opacity = '0';
         setTimeout(() => {
-            element.innerHTML = newHTML;
+            callback();
             element.style.opacity = '1';
         }, duration);
     }
@@ -23,143 +23,108 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('Scoped View Transitions not supported. Using fallback animations.');
     }
 
-    // Update Nav
-    document.getElementById('update-nav').addEventListener('click', () => {
-        const newHTML = '<ul><li>Home</li><li>About</li><li>Contact</li><li>Services</li></ul>';
-        if (isSupported) {
-            console.log('Starting nav transition');
-            nav.startViewTransition({
-                callback: () => {
-                    console.log('Nav callback executing');
-                    nav.innerHTML = newHTML;
-                }
-            });
-        } else {
-            manualTransition(nav, newHTML);
-        }
+    // Update individual posts
+    document.querySelectorAll('.update-post').forEach(button => {
+        button.addEventListener('click', () => {
+            const postId = button.dataset.post;
+            const post = posts[postId];
+            let newContent = '';
+
+            if (postId == 1) {
+                newContent = `
+                    <div class="post-header">
+                        <span class="author">Alice</span>
+                        <span class="time">2h ago</span>
+                    </div>
+                    <p class="content">Just tried the new coffee shop downtown! ☕ The latte art is amazing.</p>
+                    <div class="actions">
+                        <button class="update-post" data-post="1">Like +1</button>
+                        <span class="likes">13 likes</span>
+                    </div>
+                `;
+            } else if (postId == 2) {
+                newContent = `
+                    <div class="post-header">
+                        <span class="author">Bob</span>
+                        <span class="time">4h ago</span>
+                    </div>
+                    <p class="content">Beautiful sunset today! 🌅</p>
+                    <div class="actions">
+                        <button class="update-post" data-post="2">Comment</button>
+                        <span class="comments">4 comments</span>
+                    </div>
+                `;
+            } else if (postId == 3) {
+                newContent = `
+                    <div class="post-header">
+                        <span class="author">Charlie</span>
+                        <span class="time">6h ago</span>
+                    </div>
+                    <p class="content">New recipe alert! Made the best pasta ever. 🍝</p>
+                    <div class="actions">
+                        <button class="update-post" data-post="3">Share</button>
+                        <span class="shares">6 shares</span>
+                    </div>
+                `;
+            }
+
+            if (isSupported) {
+                post.startViewTransition({
+                    callback: () => {
+                        post.innerHTML = newContent;
+                    }
+                });
+            } else {
+                manualTransition(post, () => {
+                    post.innerHTML = newContent;
+                });
+            }
+        });
     });
 
-    // Update Sidebar
-    document.getElementById('update-sidebar').addEventListener('click', () => {
-        const newHTML = '<h3>Updated Sidebar</h3><p>New Item 1</p><p>New Item 2</p><p>New Item 3</p>';
-        if (isSupported) {
-            console.log('Starting sidebar transition');
-            sidebar.startViewTransition({
-                callback: () => {
-                    console.log('Sidebar callback executing');
-                    sidebar.innerHTML = newHTML;
-                }
-            });
-        } else {
-            manualTransition(sidebar, newHTML);
-        }
-    });
+    // Bottom navigation transitions
+    function attachNavListeners() {
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const tab = this.dataset.tab;
+                const newNav = `
+                    <button class="nav-item ${tab === 'home' ? 'active' : ''}" data-tab="home">Home</button>
+                    <button class="nav-item ${tab === 'search' ? 'active' : ''}" data-tab="search">Search</button>
+                    <button class="nav-item ${tab === 'profile' ? 'active' : ''}" data-tab="profile">Profile</button>
+                `;
 
-    // Update Content
-    document.getElementById('update-content').addEventListener('click', () => {
-        const newHTML = '<h1>Updated Main Content</h1><p>This content has been updated with a smooth transition.</p><p>More content here.</p>';
-        if (isSupported) {
-            console.log('Starting content transition');
-            content.startViewTransition({
-                callback: () => {
-                    console.log('Content callback executing');
-                    content.innerHTML = newHTML;
+                if (isSupported) {
+                    bottomNav.startViewTransition({
+                        callback: () => {
+                            bottomNav.innerHTML = newNav;
+                            attachNavListeners();
+                        }
+                    });
+                } else {
+                    manualTransition(bottomNav, () => {
+                        bottomNav.innerHTML = newNav;
+                        attachNavListeners();
+                    });
                 }
             });
-        } else {
-            manualTransition(content, newHTML);
-        }
-    });
+        });
+    }
 
-    // Update Footer
-    document.getElementById('update-footer').addEventListener('click', () => {
-        const newHTML = '<p>Updated footer with new information and links.</p><p>Contact us at example.com</p>';
-        if (isSupported) {
-            console.log('Starting footer transition');
-            footer.startViewTransition({
-                callback: () => {
-                    console.log('Footer callback executing');
-                    footer.innerHTML = newHTML;
-                }
-            });
-        } else {
-            manualTransition(footer, newHTML);
-        }
-    });
+    attachNavListeners();
 
-    // Reset All
-    document.getElementById('reset').addEventListener('click', () => {
-        const navHTML = '<ul><li>Home</li><li>About</li></ul>';
-        const sidebarHTML = '<h3>Sidebar</h3><p>Item 1</p><p>Item 2</p>';
-        const contentHTML = '<h1>Main Content</h1><p>This is the main content area.</p>';
-        const footerHTML = '<p>Footer content here.</p>';
+    // Auto-update header after 2 seconds
+    setTimeout(() => {
+        const newHeader = '<h1>Social Feed - Updated</h1>';
         if (isSupported) {
-            console.log('Resetting all');
-            nav.startViewTransition({
+            header.startViewTransition({
                 callback: () => {
-                    nav.innerHTML = navHTML;
-                }
-            });
-            sidebar.startViewTransition({
-                callback: () => {
-                    sidebar.innerHTML = sidebarHTML;
-                }
-            });
-            content.startViewTransition({
-                callback: () => {
-                    content.innerHTML = contentHTML;
-                }
-            });
-            footer.startViewTransition({
-                callback: () => {
-                    footer.innerHTML = footerHTML;
+                    header.innerHTML = newHeader;
                 }
             });
         } else {
-            manualTransition(nav, navHTML);
-            manualTransition(sidebar, sidebarHTML);
-            manualTransition(content, contentHTML);
-            manualTransition(footer, footerHTML);
+            manualTransition(header, () => {
+                header.innerHTML = newHeader;
+            });
         }
-    });
-
-    // Update All Simultaneously
-    document.getElementById('update-all').addEventListener('click', () => {
-        const navHTML = '<ul><li>Dashboard</li><li>Profile</li><li>Settings</li></ul>';
-        const sidebarHTML = '<h3>Quick Links</h3><p>Link 1</p><p>Link 2</p>';
-        const contentHTML = '<h1>All Updated</h1><p>All sections transitioned simultaneously.</p>';
-        const footerHTML = '<p>Simultaneous update demo complete!</p>';
-        if (isSupported) {
-            console.log('Starting all transitions');
-            nav.startViewTransition({
-                callback: () => {
-                    console.log('Nav callback in all');
-                    nav.innerHTML = navHTML;
-                }
-            });
-            sidebar.startViewTransition({
-                callback: () => {
-                    console.log('Sidebar callback in all');
-                    sidebar.innerHTML = sidebarHTML;
-                }
-            });
-            content.startViewTransition({
-                callback: () => {
-                    console.log('Content callback in all');
-                    content.innerHTML = contentHTML;
-                }
-            });
-            footer.startViewTransition({
-                callback: () => {
-                    console.log('Footer callback in all');
-                    footer.innerHTML = footerHTML;
-                }
-            });
-        } else {
-            manualTransition(nav, navHTML);
-            manualTransition(sidebar, sidebarHTML);
-            manualTransition(content, contentHTML);
-            manualTransition(footer, footerHTML);
-        }
-    });
+    }, 2000);
 });
