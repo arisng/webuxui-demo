@@ -1,0 +1,15 @@
+{
+    "servers": {
+        "memory": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-memory"
+            ],
+            "env": {
+                "MEMORY_FILE_PATH": "C:/Users/DuyAnh/Workplace/Demo/webuxui-demo/.vscode/mcp-memory.json"
+            },
+            "type": "stdio"
+        }
+    }
+}
