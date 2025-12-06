@@ -1,10 +1,13 @@
 // Scoped View Transitions Demo Script
 
 document.addEventListener('DOMContentLoaded', () => {
-    const nav = document.getElementById('nav');
-    const sidebar = document.getElementById('sidebar');
-    const content = document.getElementById('content');
-    const footer = document.getElementById('footer');
+    const header = document.getElementById('header');
+    const posts = {
+        1: document.getElementById('post1'),
+        2: document.getElementById('post2'),
+        3: document.getElementById('post3')
+    };
+    const bottomNav = document.getElementById('bottom-nav');
 
     // Fallback function for manual transitions
     function manualTransition(element, callback, duration = 600) {
