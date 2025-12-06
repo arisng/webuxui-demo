@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scoped View Transitions Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav id="nav" style="contain: layout;">
+            <ul>
+                <li>Home</li>
+                <li>About</li>
+            </ul>
+        </nav>
+    </header>
+    <aside id="sidebar" style="contain: layout;">
+        <h3>Sidebar</h3>
+        <p>Item 1</p>
+        <p>Item 2</p>
+    </aside>
+    <main id="content" style="contain: layout;">
+        <h1>Main Content</h1>
+        <p>This is the main content area.</p>
+    </main>
+    <footer id="footer" style="contain: layout;">
+        <p>Footer content here.</p>
+    </footer>
+    <div class="controls">
+        <button id="update-nav">Update Nav</button>
+        <button id="update-sidebar">Update Sidebar</button>
+        <button id="update-content">Update Content</button>
+        <button id="update-footer">Update Footer</button>
+        <button id="update-all">Update All</button>
+        <button id="reset">Reset</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

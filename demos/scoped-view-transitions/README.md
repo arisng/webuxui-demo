@@ -4,9 +4,9 @@ This demo showcases the Scoped View Transitions API, a new CSS feature in Chrome
 
 ## Features
 
-- **Scoped Transitions**: Each section (nav, sidebar, content) has its own transition scope.
-- **Simultaneous Animations**: Multiple transitions can run at the same time without interfering.
-- **CSS-Powered**: Animations are handled via CSS for performance.
+- **Scoped Transitions**: Each section (nav, sidebar, content, footer) has its own transition scope with unique animations.
+- **Simultaneous Animations**: Multiple transitions can run at the same time without interfering, showcasing isolation.
+- **Impressive Effects**: Bounce slides, rotations, scaling, and flips for a dynamic demo.
 - **Progressive Enhancement**: Falls back to manual opacity transitions if the API is not supported.
 
 ## Setup
@@ -17,10 +17,12 @@ This demo showcases the Scoped View Transitions API, a new CSS feature in Chrome
 
 ## Usage
 
-- Click "Update Nav" to transition the navigation menu.
-- Click "Update Sidebar" to transition the sidebar content.
-- Click "Update Content" to transition the main content.
+- Click "Update Nav" for bouncy slide transition.
+- Click "Update Sidebar" for rotating transition.
+- Click "Update Content" for scaling fade transition.
+- Click "Update Footer" for flip transition.
 - Click "Update All" to trigger all transitions simultaneously.
+- Click "Reset" to return to original state with simultaneous transitions.
 
 ## Browser Support
 

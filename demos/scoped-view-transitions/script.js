@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nav = document.getElementById('nav');
     const sidebar = document.getElementById('sidebar');
     const content = document.getElementById('content');
+    const footer = document.getElementById('footer');
 
     // Fallback function for manual transitions
     function manualTransition(element, newHTML, duration = 500) {
@@ -70,11 +71,64 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Update Footer
+    document.getElementById('update-footer').addEventListener('click', () => {
+        const newHTML = '<p>Updated footer with new information and links.</p><p>Contact us at example.com</p>';
+        if (isSupported) {
+            console.log('Starting footer transition');
+            footer.startViewTransition({
+                callback: () => {
+                    console.log('Footer callback executing');
+                    footer.innerHTML = newHTML;
+                }
+            });
+        } else {
+            manualTransition(footer, newHTML);
+        }
+    });
+
+    // Reset All
+    document.getElementById('reset').addEventListener('click', () => {
+        const navHTML = '<ul><li>Home</li><li>About</li></ul>';
+        const sidebarHTML = '<h3>Sidebar</h3><p>Item 1</p><p>Item 2</p>';
+        const contentHTML = '<h1>Main Content</h1><p>This is the main content area.</p>';
+        const footerHTML = '<p>Footer content here.</p>';
+        if (isSupported) {
+            console.log('Resetting all');
+            nav.startViewTransition({
+                callback: () => {
+                    nav.innerHTML = navHTML;
+                }
+            });
+            sidebar.startViewTransition({
+                callback: () => {
+                    sidebar.innerHTML = sidebarHTML;
+                }
+            });
+            content.startViewTransition({
+                callback: () => {
+                    content.innerHTML = contentHTML;
+                }
+            });
+            footer.startViewTransition({
+                callback: () => {
+                    footer.innerHTML = footerHTML;
+                }
+            });
+        } else {
+            manualTransition(nav, navHTML);
+            manualTransition(sidebar, sidebarHTML);
+            manualTransition(content, contentHTML);
+            manualTransition(footer, footerHTML);
+        }
+    });
+
     // Update All Simultaneously
     document.getElementById('update-all').addEventListener('click', () => {
         const navHTML = '<ul><li>Dashboard</li><li>Profile</li><li>Settings</li></ul>';
         const sidebarHTML = '<h3>Quick Links</h3><p>Link 1</p><p>Link 2</p>';
         const contentHTML = '<h1>All Updated</h1><p>All sections transitioned simultaneously.</p>';
+        const footerHTML = '<p>Simultaneous update demo complete!</p>';
         if (isSupported) {
             console.log('Starting all transitions');
             nav.startViewTransition({
@@ -95,10 +149,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     content.innerHTML = contentHTML;
                 }
             });
+            footer.startViewTransition({
+                callback: () => {
+                    console.log('Footer callback in all');
+                    footer.innerHTML = footerHTML;
+                }
+            });
         } else {
             manualTransition(nav, navHTML);
             manualTransition(sidebar, sidebarHTML);
             manualTransition(content, contentHTML);
+            manualTransition(footer, footerHTML);
         }
     });
 });
