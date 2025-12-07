@@ -1,0 +1,211 @@
+{
+    "type": "entity",
+    "name": "WebUXUIDemo",
+    "entityType": "Project",
+    "observations": [
+        "Repository name: webuxui-demo",
+        "Owner: arisng",
+        "Current branch: main",
+        "Focus: interactive web UI demos showcasing modern web platform features, particularly Scoped View Transitions",
+        "Architecture: Each demo in demos/<demo-name>/ with index.html, styles.css, script.js, README.md",
+        "Standalone demos with no shared dependencies",
+        "Progressive enhancement and mobile-first design"
+    ]
+}
+{
+    "type": "entity",
+    "name": "ScopedViewTransitionsDemo",
+    "entityType": "Demo",
+    "observations": [
+        "Name: Mobile Scoped View Transitions Demo",
+        "Location: demos/scoped-view-transitions/",
+        "Files: index.html, styles.css, script.js, README.md, ENHANCEMENT_PLAN.md",
+        "Features: Mobile-First Design, Social Feed Simulation, Individual Post Updates, Bottom Navigation, Simultaneous Isolation, Progressive Enhancement",
+        "Setup: Enable Experimental Web Platform features in Chrome, Open index.html",
+        "Usage: Post interactions, navigation, auto-update",
+        "Use cases: Social media feeds, news apps, messaging apps, e-commerce, dashboard apps",
+        "Browser support: Chrome 140+",
+        "Related links: Scoped View Transitions Explainer, View Transitions API Docs"
+    ]
+}
+{
+    "type": "entity",
+    "name": "ScopedViewTransitions",
+    "entityType": "Technology",
+    "observations": [
+        "Modern web platform feature",
+        "Used for isolated animations in demos"
+    ]
+}
+{
+    "type": "entity",
+    "name": "HTML",
+    "entityType": "Technology",
+    "observations": [
+        "Used in demos",
+        "Semantic elements",
+        "contain: layout; for transition elements"
+    ]
+}
+{
+    "type": "entity",
+    "name": "CSS",
+    "entityType": "Technology",
+    "observations": [
+        "Assign unique view-transition-name to scoped elements",
+        "Use ::view-transition-group(), ::view-transition-old(), ::view-transition-new() for custom animations"
+    ]
+}
+{
+    "type": "entity",
+    "name": "JavaScript",
+    "entityType": "Technology",
+    "observations": [
+        "Check API support with HTMLElement.prototype.startViewTransition",
+        "Provide manual fallbacks using opacity transitions"
+    ]
+}
+{
+    "type": "entity",
+    "name": "LocalTesting",
+    "entityType": "Workflow",
+    "observations": [
+        "Run python -m http.server 8000 from project root",
+        "Open http://localhost:8000/demos/<demo>/index.html in Chrome"
+    ]
+}
+{
+    "type": "entity",
+    "name": "BrowserSetup",
+    "entityType": "Workflow",
+    "observations": [
+        "Enable 'Experimental Web Platform features' in chrome://flags/#enable-experimental-web-platform-features"
+    ]
+}
+{
+    "type": "entity",
+    "name": "VersionControl",
+    "entityType": "Workflow",
+    "observations": [
+        "Use atomic commits with descriptive messages (e.g., 'feat: add pull-to-refresh functionality')"
+    ]
+}
+{
+    "type": "entity",
+    "name": "CodePatterns",
+    "entityType": "Concept",
+    "observations": [
+        "HTML: semantic elements, add contain: layout; to transition elements",
+        "CSS: assign unique view-transition-name",
+        "JavaScript: check API support, provide fallbacks",
+        "Animations: use ::view-transition-group() etc.",
+        "Mobile-First: design for touch, use flexbox"
+    ]
+}
+{
+    "type": "entity",
+    "name": "Examples",
+    "entityType": "Concept",
+    "observations": [
+        "Scoped transitions: element.startViewTransition({ callback: () => { element.innerHTML = newContent; } });",
+        "Fallback: manualTransition(element, () => { element.innerHTML = newContent; }, 600);",
+        "Key files: demos/scoped-view-transitions/script.js for transition logic, styles.css for animations"
+    ]
+}
+{
+    "type": "entity",
+    "name": "Testing",
+    "entityType": "Workflow",
+    "observations": [
+        "Test in Chrome with experimental flags",
+        "Verify fallbacks by disabling the flag",
+        "Check mobile responsiveness"
+    ]
+}
+{
+    "type": "entity",
+    "name": "EnhancementPlan",
+    "entityType": "Document",
+    "observations": [
+        "Completed: Basic scoped transitions demo, Enhanced animations, Mobile-first social feed redesign, Individual post updates, Bottom navigation, Progressive enhancement, Fixed JavaScript issues",
+        "Planned: Add user avatars and images, Implement loading skeletons, Enhance typography, Add pull-to-refresh, Implement infinite scroll, Add post creation modal, Optimize animations for 60fps"
+    ]
+}
+{
+    "type": "relation",
+    "from": "WebUXUIDemo",
+    "to": "ScopedViewTransitionsDemo",
+    "relationType": "contains"
+}
+{
+    "type": "relation",
+    "from": "ScopedViewTransitionsDemo",
+    "to": "ScopedViewTransitions",
+    "relationType": "uses"
+}
+{
+    "type": "relation",
+    "from": "ScopedViewTransitionsDemo",
+    "to": "HTML",
+    "relationType": "uses"
+}
+{
+    "type": "relation",
+    "from": "ScopedViewTransitionsDemo",
+    "to": "CSS",
+    "relationType": "uses"
+}
+{
+    "type": "relation",
+    "from": "ScopedViewTransitionsDemo",
+    "to": "JavaScript",
+    "relationType": "uses"
+}
+{
+    "type": "relation",
+    "from": "WebUXUIDemo",
+    "to": "LocalTesting",
+    "relationType": "hasWorkflow"
+}
+{
+    "type": "relation",
+    "from": "WebUXUIDemo",
+    "to": "BrowserSetup",
+    "relationType": "hasWorkflow"
+}
+{
+    "type": "relation",
+    "from": "WebUXUIDemo",
+    "to": "VersionControl",
+    "relationType": "hasWorkflow"
+}
+{
+    "type": "relation",
+    "from": "WebUXUIDemo",
+    "to": "Testing",
+    "relationType": "hasWorkflow"
+}
+{
+    "type": "relation",
+    "from": "WebUXUIDemo",
+    "to": "CodePatterns",
+    "relationType": "follows"
+}
+{
+    "type": "relation",
+    "from": "WebUXUIDemo",
+    "to": "Examples",
+    "relationType": "includes"
+}
+{
+    "type": "relation",
+    "from": "ScopedViewTransitionsDemo",
+    "to": "EnhancementPlan",
+    "relationType": "hasDocument"
+}
+{
+    "type": "relation",
+    "from": "EnhancementPlan",
+    "to": "ScopedViewTransitionsDemo",
+    "relationType": "belongsTo"
+}
