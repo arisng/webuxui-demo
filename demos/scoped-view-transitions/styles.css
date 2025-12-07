@@ -18,6 +18,7 @@ header {
     border-bottom: 1px solid #e9ecef;
     contain: layout;
     view-transition-name: header-transition;
+    will-change: transform, opacity;
 }
 
 header h1 {
@@ -40,6 +41,7 @@ main {
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     contain: layout;
+    will-change: transform, opacity;
 }
 
 .post:nth-child(1) { view-transition-name: post1-transition; }
@@ -132,6 +134,7 @@ nav {
     padding: 0.75rem 1rem;
     contain: layout;
     view-transition-name: nav-transition;
+    will-change: transform, opacity;
 }
 
 .nav-item {
@@ -158,70 +161,85 @@ nav {
 
 ::view-transition-group(header-transition) {
     animation-duration: 0.4s;
-    animation-timing-function: ease-out;
+    animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+    animation-fill-mode: both;
 }
 
 ::view-transition-old(header-transition) {
-    animation: slide-up-out 0.4s ease-out;
+    animation: slide-up-out 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 ::view-transition-new(header-transition) {
-    animation: slide-down-in 0.4s ease-out;
+    animation: slide-down-in 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 ::view-transition-group(post1-transition) {
     animation-duration: 0.6s;
-    animation-timing-function: ease-out;
+    animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+    animation-fill-mode: both;
 }
 
 ::view-transition-old(post1-transition) {
-    animation: card-slide-left 0.6s ease-out;
+    animation: card-slide-left 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 ::view-transition-new(post1-transition) {
-    animation: card-slide-right 0.6s ease-out;
+    animation: card-slide-right 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 ::view-transition-group(post2-transition) {
     animation-duration: 0.6s;
-    animation-timing-function: ease-out;
+    animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+    animation-fill-mode: both;
 }
 
 ::view-transition-old(post2-transition) {
-    animation: card-fade-scale 0.6s ease-out;
+    animation: card-fade-scale 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 ::view-transition-new(post2-transition) {
-    animation: card-fade-scale-in 0.6s ease-out;
+    animation: card-fade-scale-in 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 ::view-transition-group(post3-transition) {
     animation-duration: 0.6s;
-    animation-timing-function: ease-out;
+    animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+    animation-fill-mode: both;
 }
 
 ::view-transition-old(post3-transition) {
-    animation: card-rotate-out 0.6s ease-out;
+    animation: card-rotate-out 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 ::view-transition-new(post3-transition) {
-    animation: card-rotate-in 0.6s ease-out;
+    animation: card-rotate-in 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 ::view-transition-group(nav-transition) {
     animation-duration: 0.3s;
-    animation-timing-function: ease-in-out;
+    animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+    animation-fill-mode: both;
 }
 
 ::view-transition-old(nav-transition) {
-    animation: nav-fade-out 0.3s ease-in-out;
+    animation: nav-fade-out 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 ::view-transition-new(nav-transition) {
-    animation: nav-fade-in 0.3s ease-in-out;
+    animation: nav-fade-in 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
-/* Keyframes for animations */
+/* Performance optimizations for 60fps animations */
+.post, header, nav, .modal, .modal-overlay {
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Ensure animations use GPU acceleration */
+::view-transition-old(*),
+::view-transition-new(*) {
+    will-change: transform, opacity;
+}
 
 @keyframes slide-up-out {
     to {
@@ -437,6 +455,7 @@ nav {
     transition: all 0.3s ease;
     contain: layout;
     view-transition-name: modal-overlay-transition;
+    will-change: opacity;
 }
 
 .modal-overlay.visible {
@@ -456,6 +475,7 @@ nav {
     transition: all 0.3s ease;
     contain: layout;
     view-transition-name: modal-transition;
+    will-change: transform, opacity;
 }
 
 .modal-overlay.visible .modal {
