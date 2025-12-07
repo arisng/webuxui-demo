@@ -864,3 +864,220 @@ nav {
 .btn-secondary:hover {
     background: #545b62;
 }
+
+/* Share Sheet Styles */
+.share-sheet-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.share-sheet-overlay.visible {
+    display: block;
+    opacity: 1;
+}
+
+.share-sheet {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 16px 16px 0 0;
+    padding: 0;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.share-sheet-overlay.visible .share-sheet {
+    transform: translateY(0);
+}
+
+.share-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.share-header h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #495057;
+}
+
+.share-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.share-close:hover {
+    background: #f8f9fa;
+    color: #495057;
+}
+
+.share-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.share-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.share-option:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.share-icon {
+    font-size: 1.5rem;
+}
+
+.share-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #495057;
+}
+
+/* Staggered Share Option Animations */
+.share-option:nth-child(1) {
+    animation: share-option-enter 0.4s ease-out 0.1s both;
+}
+
+.share-option:nth-child(2) {
+    animation: share-option-enter 0.4s ease-out 0.15s both;
+}
+
+.share-option:nth-child(3) {
+    animation: share-option-enter 0.4s ease-out 0.2s both;
+}
+
+.share-option:nth-child(4) {
+    animation: share-option-enter 0.4s ease-out 0.25s both;
+}
+
+.share-option:nth-child(5) {
+    animation: share-option-enter 0.4s ease-out 0.3s both;
+}
+
+.share-option:nth-child(6) {
+    animation: share-option-enter 0.4s ease-out 0.35s both;
+}
+
+@keyframes share-option-enter {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Scoped View Transitions for Share Sheet */
+::view-transition-group(share-twitter-transition),
+::view-transition-group(share-facebook-transition),
+::view-transition-group(share-copy-transition),
+::view-transition-group(share-whatsapp-transition),
+::view-transition-group(share-telegram-transition),
+::view-transition-group(share-email-transition) {
+    animation-duration: 0.3s;
+    animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+    animation-fill-mode: both;
+}
+
+::view-transition-old(share-twitter-transition),
+::view-transition-old(share-facebook-transition),
+::view-transition-old(share-copy-transition),
+::view-transition-old(share-whatsapp-transition),
+::view-transition-old(share-telegram-transition),
+::view-transition-old(share-email-transition) {
+    animation: share-option-out 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+::view-transition-new(share-twitter-transition),
+::view-transition-new(share-facebook-transition),
+::view-transition-new(share-copy-transition),
+::view-transition-new(share-whatsapp-transition),
+::view-transition-new(share-telegram-transition),
+::view-transition-new(share-email-transition) {
+    animation: share-option-in 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+@keyframes share-option-out {
+    to {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+@keyframes share-option-in {
+    from {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Share feedback animation */
+@keyframes share-feedback {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    10% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    90% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+}

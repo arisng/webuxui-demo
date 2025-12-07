@@ -428,6 +428,8 @@ document.addEventListener('DOMContentLoaded', () => {
             handleLikeAction(post, postId);
         } else if (action === 'comment') {
             handleCommentAction(post, postId);
+        } else if (action === 'share') {
+            handleShareAction(post, postId);
         } else {
             // Handle other actions (share)
             const counterElement = post.querySelector('.shares');
@@ -571,6 +573,103 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update comment count
         const currentCount = parseInt(commentCount.textContent) || 0;
         commentCount.textContent = currentCount + 1;
+    }
+
+    // Special handling for share actions (show share sheet)
+    function handleShareAction(post, postId) {
+        const shareSheetOverlay = document.getElementById('share-sheet-overlay');
+        const shareSheet = document.getElementById('share-sheet');
+
+        if (isSupported) {
+            // Use scoped view transitions for share sheet appearance
+            shareSheet.style.viewTransitionName = `share-sheet-${postId}-transition`;
+
+            shareSheetOverlay.startViewTransition(() => {
+                shareSheetOverlay.classList.add('visible');
+            });
+        } else {
+            // Fallback for browsers without scoped transitions
+            shareSheetOverlay.classList.add('visible');
+        }
+    }
+
+    // Handle share option clicks
+    document.querySelectorAll('.share-option').forEach(option => {
+        option.addEventListener('click', function() {
+            const shareType = this.dataset.share;
+            handleShareOption(shareType);
+        });
+    });
+
+    // Handle share sheet close
+    document.getElementById('share-close').addEventListener('click', hideShareSheet);
+    document.getElementById('share-sheet-overlay').addEventListener('click', function(e) {
+        if (e.target === this) {
+            hideShareSheet();
+        }
+    });
+
+    // Function to hide share sheet
+    function hideShareSheet() {
+        const shareSheetOverlay = document.getElementById('share-sheet-overlay');
+
+        if (isSupported) {
+            shareSheetOverlay.startViewTransition(() => {
+                shareSheetOverlay.classList.remove('visible');
+            });
+        } else {
+            shareSheetOverlay.classList.remove('visible');
+        }
+    }
+
+    // Handle individual share options
+    function handleShareOption(shareType) {
+        // Simulate sharing action
+        const messages = {
+            twitter: 'Post shared to Twitter! 🐦',
+            facebook: 'Post shared to Facebook! 📘',
+            copy: 'Link copied to clipboard! 🔗',
+            whatsapp: 'Post shared via WhatsApp! 💬',
+            telegram: 'Post shared via Telegram! ✈️',
+            email: 'Post shared via Email! ✉️'
+        };
+
+        // Show feedback (you could replace this with actual sharing functionality)
+        showShareFeedback(messages[shareType] || 'Shared!');
+
+        // Hide share sheet
+        setTimeout(() => {
+            hideShareSheet();
+        }, 500);
+    }
+
+    // Show share feedback
+    function showShareFeedback(message) {
+        // Create a temporary feedback element
+        const feedback = document.createElement('div');
+        feedback.textContent = message;
+        feedback.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            z-index: 2000;
+            pointer-events: none;
+            animation: share-feedback 2s ease-out;
+        `;
+
+        document.body.appendChild(feedback);
+
+        setTimeout(() => {
+            if (feedback.parentNode) {
+                feedback.parentNode.removeChild(feedback);
+            }
+        }, 2000);
     }
 
     // Create particle burst effect for likes
