@@ -94,6 +94,7 @@ Transform the demo into a stunning showcase of Scoped View Transitions by implem
 - **HTML Structure**: Additional elements for comments, share options, notifications
 - **Performance Optimizations**: GPU-accelerated animations for smooth 60fps
 - **UX Improvements**: Scroll locking for overlays, counter-based modal management
+- **Mobile Navigation**: Fixed bottom nav with dynamic viewport height, safe area support
 
 ### Technical Implementation Details
 
@@ -234,6 +235,8 @@ post.startViewTransition(() => {
 - **Accessibility**: Scroll locking improves focus management and prevents accidental navigation
 - **Notification Systems**: Scoped transitions enable smooth, isolated animations for multiple simultaneous notifications
 - **User Feedback**: Real-time notifications enhance perceived responsiveness and engagement
+- **Mobile Navigation**: Fixed bottom nav requires dynamic viewport height and safe area handling
+- **Cross-Platform Mobile**: iOS and Android need different approaches for address bar and safe areas
 - **Pro tip**: This implementation also prevents the common iOS Safari bounce scrolling issue when modals are open
 
 ### Prevention
@@ -246,6 +249,9 @@ post.startViewTransition(() => {
 - [ ] Implement scroll locking for all modal overlays to prevent background scrolling
 - [ ] Use counter-based scroll management for multiple simultaneous overlays
 - [ ] Test overlay interactions on mobile devices for proper touch handling
+- [ ] Use dynamic viewport height (100dvh) for mobile browsers with address bars
+- [ ] Implement safe area insets for iOS devices with notches/home indicators
+- [ ] Test fixed navigation positioning across different mobile browsers
 
 ### Related
 
