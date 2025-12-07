@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Variable to save scroll position for back navigation
     let savedScrollPosition = 0;
+    // Variable to track the currently expanded post
+    let currentExpandedPost = null;
 
     // Fallback function for manual transitions
     function manualTransition(element, callback, duration = 600) {
@@ -818,6 +820,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Save current scroll position
         savedScrollPosition = mainElement.scrollTop;
 
+        // Set current expanded post
+        currentExpandedPost = post;
+
         // Populate details view with post content
         populateDetailsView(post);
 
@@ -852,6 +857,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const postClone = post.cloneNode(true);
         postClone.id = 'details-post-content';
         postClone.className = 'details-post-content';
+
+        // Remove view transition name from clone to avoid duplicates
+        postClone.style.viewTransitionName = '';
 
         // Remove onclick to prevent recursion
         postClone.removeAttribute('onclick');
@@ -918,26 +926,50 @@ document.addEventListener('DOMContentLoaded', () => {
         const mainElement = document.querySelector('main');
         const header = document.getElementById('header');
         const bottomNav = document.getElementById('bottom-nav');
+        const detailsPost = document.getElementById('details-post');
+
+        // Show nav and make details background transparent to reveal nav during transition
+        detailsView.style.backgroundColor = 'transparent';
 
         if (isSupported) {
             // Use view transitions for page navigation
-            document.startViewTransition(() => {
+            const transition = document.startViewTransition(() => {
                 // Hide details, show feed
                 detailsView.style.display = 'none';
+                detailsView.style.backgroundColor = ''; // Reset background
                 mainElement.style.display = 'block';
                 header.style.display = 'block';
-                bottomNav.style.display = 'block';
 
                 // Restore scroll position
                 mainElement.scrollTop = savedScrollPosition;
+
+                // Reset view transition names
+                if (currentExpandedPost) {
+                    currentExpandedPost.style.viewTransitionName = '';
+                }
+                detailsPost.style.viewTransitionName = '';
+                currentExpandedPost = null;
+            });
+
+            // Show nav after transition completes to avoid layering issues
+            transition.finished.then(() => {
+                bottomNav.style.display = '';
             });
         } else {
             // Fallback
             detailsView.style.display = 'none';
+            detailsView.style.backgroundColor = ''; // Reset background
             mainElement.style.display = 'block';
             header.style.display = 'block';
-            bottomNav.style.display = 'block';
+            bottomNav.style.display = 'flex';
             mainElement.scrollTop = savedScrollPosition;
+
+            // Reset view transition names
+            if (currentExpandedPost) {
+                currentExpandedPost.style.viewTransitionName = '';
+            }
+            detailsPost.style.viewTransitionName = '';
+            currentExpandedPost = null;
         }
     }
 
