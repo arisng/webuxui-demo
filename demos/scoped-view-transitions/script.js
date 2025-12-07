@@ -862,12 +862,24 @@ document.addEventListener('DOMContentLoaded', () => {
         detailsPost.innerHTML = '';
         detailsPost.appendChild(postClone);
 
+        // Attach event listeners to action buttons in details view
+        postClone.querySelectorAll('.action-btn').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.stopPropagation();
+                const action = this.dataset.action;
+                const postId = this.dataset.post;
+                // Use the original post for actions
+                const originalPost = document.getElementById(`post${postId}`);
+                handleAction(originalPost, postId, action);
+            });
+        });
+
         // Populate related posts
         relatedList.innerHTML = '';
         const relatedPosts = [
-            { author: 'Bob', text: 'Beautiful sunset today! 🌅', image: 'sunset' },
-            { author: 'Charlie', text: 'New recipe alert! 🍝', image: 'pasta' },
-            { author: 'Diana', text: 'Weekend hiking adventure! 🥾', image: 'hiking' }
+            { id: 4, author: 'Bob', text: 'Beautiful sunset today! 🌅', image: 'sunset' },
+            { id: 5, author: 'Charlie', text: 'New recipe alert! 🍝', image: 'pasta' },
+            { id: 6, author: 'Diana', text: 'Weekend hiking adventure! 🥾', image: 'hiking' }
         ];
 
         relatedPosts.forEach(related => {
@@ -880,6 +892,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="related-text">${related.text}</div>
                 </div>
             `;
+            // Make related posts clickable
+            relatedElement.addEventListener('click', () => {
+                // For demo, create a dummy post and navigate to it
+                const dummyPost = createDummyPost(related.id, related.author, related.text, related.image);
+                togglePostExpansion(`post${related.id}`);
+            });
             relatedList.appendChild(relatedElement);
         });
     }
@@ -913,9 +931,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Make functions global
-    window.togglePostExpansion = togglePostExpansion;
-    window.goBackToFeed = goBackToFeed;
+    // Function to create a dummy post for related navigation
+    function createDummyPost(id, author, text, image) {
+        // Create a temporary post element for navigation
+        const dummyPost = document.createElement('article');
+        dummyPost.className = 'post';
+        dummyPost.id = `post${id}`;
+        dummyPost.style.contain = 'layout';
+        dummyPost.innerHTML = `
+            <div class="post-header">
+                <img src="${createPlaceholderAvatar(author.toLowerCase(), 40)}" alt="${author}" class="avatar">
+                <div class="author-info">
+                    <span class="author">${author}</span>
+                    <span class="time">Just now</span>
+                </div>
+            </div>
+            <p class="content">${text}</p>
+            <img src="${createPlaceholderImage(300, 200, image)}" alt="${text}" class="post-image" style="view-transition-name: image-${id};">
+            <div class="actions">
+                <button class="action-btn like-btn" data-post="${id}" data-action="like" data-liked="false">
+                    <span class="heart-icon">🤍</span>
+                    <span class="like-count">0</span>
+                </button>
+                <button class="action-btn comment-btn" data-post="${id}" data-action="comment">💬 Comment</button>
+                <span class="comments">0</span>
+                <button class="action-btn share-btn" data-post="${id}" data-action="share">📤 Share</button>
+                <span class="shares">0</span>
+            </div>
+            <div class="comments-section" id="comments-${id}" style="display: none;">
+                <div class="comment-input">
+                    <img src="https://picsum.photos/seed/user/32/32" alt="You" class="comment-avatar">
+                    <input type="text" class="comment-field" placeholder="Write a comment..." data-post="${id}">
+                </div>
+                <div class="comments-list">
+                </div>
+            </div>
+        `;
+        // Temporarily add to DOM for transition
+        document.querySelector('main').appendChild(dummyPost);
+        return dummyPost;
+    }
 
     // Handle share option clicks
     document.querySelectorAll('.share-option').forEach(option => {
