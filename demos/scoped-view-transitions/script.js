@@ -19,6 +19,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }, duration);
     }
 
+    // Function to create loading skeleton
+    function createSkeleton() {
+        return `
+            <div class="post-header">
+                <div class="skeleton skeleton-avatar"></div>
+                <div class="author-info">
+                    <div class="skeleton skeleton-text short"></div>
+                    <div class="skeleton skeleton-text short"></div>
+                </div>
+            </div>
+            <div class="skeleton skeleton-text long"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-image"></div>
+            <div class="actions">
+                <div class="skeleton skeleton-text short"></div>
+                <div class="skeleton skeleton-text short"></div>
+            </div>
+        `;
+    }
+
     // Check if scoped view transitions are supported
     const isSupported = HTMLElement.prototype.startViewTransition;
     if (!isSupported) {
@@ -86,12 +106,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isSupported) {
                 post.startViewTransition({
                     callback: () => {
-                        post.innerHTML = newContent;
+                        post.innerHTML = createSkeleton();
+                        setTimeout(() => {
+                            post.innerHTML = newContent;
+                        }, 1000); // Simulate loading time
                     }
                 });
             } else {
                 manualTransition(post, () => {
-                    post.innerHTML = newContent;
+                    post.innerHTML = createSkeleton();
+                    setTimeout(() => {
+                        manualTransition(post, () => {
+                            post.innerHTML = newContent;
+                        }, 300);
+                    }, 1000);
                 });
             }
         });
