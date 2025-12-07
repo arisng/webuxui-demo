@@ -1,4 +1,4 @@
-# Scoped View Transitions UX/UI Enhancement - Phase 3
+# Scoped View Transitions UX/UI Enhancement - Phase 1-3
 
 **Date:** 2025-12-07
 **Issue Type:** Enhancement

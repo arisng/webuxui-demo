@@ -202,11 +202,25 @@ main {
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     contain: layout;
     will-change: transform, opacity;
+    cursor: pointer; /* Indicate clickable for expansion */
 }
 
 .post:nth-child(1) { view-transition-name: post1-transition; }
 .post:nth-child(2) { view-transition-name: post2-transition; }
 .post:nth-child(3) { view-transition-name: post3-transition; }
+
+.post.expanded .post-image {
+    height: 400px; /* Larger image in expanded state */
+    object-fit: cover;
+}
+
+.post.expanded .content {
+    /* Full content shown */
+}
+
+.post.expanded {
+    /* Any additional styles for expanded post */
+}
 
 .post-header {
     display: flex;
@@ -549,6 +563,56 @@ nav {
 
 ::view-transition-new(post3-transition) {
     animation: card-rotate-in 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+/* Image morphing transitions for post expansion */
+::view-transition-group(image-1) {
+    animation-duration: 0.8s;
+    animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+::view-transition-old(image-1) {
+    animation: image-shrink 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+::view-transition-new(image-1) {
+    animation: image-expand 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+::view-transition-group(image-2) {
+    animation-duration: 0.8s;
+    animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+::view-transition-old(image-2) {
+    animation: image-shrink 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+::view-transition-new(image-2) {
+    animation: image-expand 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+::view-transition-group(image-3) {
+    animation-duration: 0.8s;
+    animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+::view-transition-old(image-3) {
+    animation: image-shrink 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+::view-transition-new(image-3) {
+    animation: image-expand 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+@keyframes image-expand {
+    0% { transform: scale(0.8); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes image-shrink {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0.8); opacity: 0.8; }
 }
 
 ::view-transition-group(nav-transition) {

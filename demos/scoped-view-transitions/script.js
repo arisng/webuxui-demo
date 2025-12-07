@@ -79,7 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle action buttons (like, comment, share)
     document.querySelectorAll('.action-btn').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent post expansion when clicking buttons
             const postId = this.dataset.post;
             const action = this.dataset.action;
             const post = posts[postId];
@@ -704,6 +705,50 @@ document.addEventListener('DOMContentLoaded', () => {
             shareSheetOverlay.classList.add('visible');
         }
     }
+
+    // Function to toggle post expansion
+    function togglePostExpansion(postId) {
+        const post = document.getElementById(postId);
+        const isExpanded = post.classList.contains('expanded');
+
+        // Close any other expanded posts
+        document.querySelectorAll('.post.expanded').forEach(expandedPost => {
+            if (expandedPost.id !== postId) {
+                if (isSupported) {
+                    expandedPost.startViewTransition(() => {
+                        expandedPost.classList.remove('expanded');
+                    });
+                } else {
+                    manualTransition(expandedPost, () => {
+                        expandedPost.classList.remove('expanded');
+                    }, 400);
+                }
+            }
+        });
+
+        if (isSupported) {
+            // Use scoped view transitions for post expansion
+            post.startViewTransition(() => {
+                if (isExpanded) {
+                    post.classList.remove('expanded');
+                } else {
+                    post.classList.add('expanded');
+                }
+            });
+        } else {
+            // Fallback for browsers without scoped transitions
+            manualTransition(post, () => {
+                if (isExpanded) {
+                    post.classList.remove('expanded');
+                } else {
+                    post.classList.add('expanded');
+                }
+            }, 400);
+        }
+    }
+
+    // Make togglePostExpansion global
+    window.togglePostExpansion = togglePostExpansion;
 
     // Handle share option clicks
     document.querySelectorAll('.share-option').forEach(option => {
