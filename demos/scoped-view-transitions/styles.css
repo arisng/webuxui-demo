@@ -1,35 +1,44 @@
 /* Mobile Scoped View Transitions Demo Styles */
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     height: 100vh;
-    background-color: #f5f5f5;
+    background-color: #f8f9fa;
+    line-height: 1.6;
+    color: #212529;
 }
 
 header {
     background-color: #fff;
-    padding: 1rem;
-    border-bottom: 1px solid #e0e0e0;
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid #e9ecef;
     contain: layout;
     view-transition-name: header-transition;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #495057;
 }
 
 main {
     flex: 1;
     overflow-y: auto;
-    padding: 1rem 0;
+    padding: 1.5rem 1rem 2rem;
 }
 
 .post {
     background-color: #fff;
-    margin: 0 1rem 1rem;
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: 0 0 1.5rem;
+    padding: 1.25rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     contain: layout;
 }
 
@@ -57,18 +66,23 @@ main {
 }
 
 .author {
-    font-weight: bold;
-    color: #333;
+    font-weight: 600;
+    color: #495057;
+    font-size: 1rem;
+    margin-bottom: 0.125rem;
 }
 
 .time {
-    color: #666;
-    font-size: 0.9rem;
+    color: #6c757d;
+    font-size: 0.875rem;
+    font-weight: 400;
 }
 
 .content {
-    margin: 0.5rem 0;
-    line-height: 1.4;
+    margin: 1rem 0;
+    line-height: 1.6;
+    font-size: 1rem;
+    color: #495057;
 }
 
 .post-image {
@@ -83,28 +97,39 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
 }
 
 .update-post {
-    background: #007bff;
+    background: linear-gradient(135deg, #007bff, #0056b3);
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 24px;
+    font-size: 0.875rem;
+    font-weight: 500;
     cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,123,255,0.2);
+}
+
+.update-post:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
 }
 
 .likes, .comments, .shares {
-    font-size: 0.9rem;
-    color: #666;
+    font-size: 0.875rem;
+    color: #6c757d;
+    font-weight: 500;
 }
 
 nav {
     background-color: #fff;
-    border-top: 1px solid #e0e0e0;
-    padding: 0.5rem;
+    border-top: 1px solid #e9ecef;
+    padding: 0.75rem 1rem;
     contain: layout;
     view-transition-name: nav-transition;
 }
@@ -113,21 +138,20 @@ nav {
     flex: 1;
     background: none;
     border: none;
-    padding: 0.5rem;
+    padding: 0.75rem;
     margin: 0 0.25rem;
-    border-radius: 8px;
-    font-size: 0.9rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease;
+    color: #6c757d;
 }
 
 .nav-item.active {
     background-color: #007bff;
     color: white;
-}
-
-.nav-item:not(.active) {
-    color: #666;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.3);
 }
 
 /* Scoped View Transition Animations */
