@@ -306,6 +306,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        // Attach click listener to the post for expansion
+        newPost.addEventListener('click', () => {
+            togglePostExpansion(newPost.id);
+        });
+
         // Smooth scroll to top
         mainElement.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -372,6 +377,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const action = this.dataset.action;
                     handleAction(newPost, postId, action);
                 });
+            });
+
+            // Attach click listener to the post for expansion
+            newPost.addEventListener('click', () => {
+                togglePostExpansion(newPost.id);
             });
 
             loadingMore.classList.add('hidden');
@@ -1245,4 +1255,15 @@ document.addEventListener('DOMContentLoaded', () => {
     handleViewportChanges();
 
     attachNavListeners();
+
+    // Make functions global
+    window.togglePostExpansion = togglePostExpansion;
+    window.goBackToFeed = goBackToFeed;
+
+    // Attach click listeners to posts
+    document.querySelectorAll('.post').forEach(post => {
+        post.addEventListener('click', () => {
+            togglePostExpansion(post.id);
+        });
+    });
 });
