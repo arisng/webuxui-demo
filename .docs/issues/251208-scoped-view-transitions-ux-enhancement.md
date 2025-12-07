@@ -171,16 +171,16 @@ post.startViewTransition(() => {
 
 **Testing & Validation:**
 - [x] Test comment expansion in Chrome with experimental features
-- [ ] Verify smooth height transitions work correctly
-- [ ] Test comment submission and display
-- [ ] Validate accessibility for comment interactions
+- [x] Verify smooth height transitions work correctly
+- [x] Test comment submission and display
+- [x] Validate accessibility for comment interactions
 
 ### Success Metrics
 
 - [x] Heart morphing animation feels native and engaging
 - [x] Comment expansion is smooth and intuitive
+- [x] Multiple simultaneous transitions work without interference
 - [ ] Share sheet animations are visually appealing
-- [ ] Multiple simultaneous transitions work without interference
 - [ ] Demo runs at 60fps on mobile devices
 - [ ] Fallback animations work in unsupported browsers
 
