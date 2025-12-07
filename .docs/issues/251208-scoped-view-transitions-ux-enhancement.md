@@ -231,6 +231,7 @@ post.startViewTransition(() => {
 - **UX Consistency**: All modal interactions should include scroll locking for better focus management
 - **Multiple Overlay Handling**: Reference counting prevents scroll conflicts when multiple overlays exist
 - **Accessibility**: Scroll locking improves focus management and prevents accidental navigation
+- **Pro tip**: This implementation also prevents the common iOS Safari bounce scrolling issue when modals are open
 
 ### Prevention
 

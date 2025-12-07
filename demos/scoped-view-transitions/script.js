@@ -103,6 +103,92 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.overflow = '';
         }
     }
+
+    // Notification System
+    let notificationId = 0;
+
+    function createNotification(message, type = 'info', duration = 4000) {
+        const container = document.getElementById('notification-container');
+        const id = ++notificationId;
+
+        const notification = document.createElement('div');
+        notification.className = `notification-badge ${type}`;
+        notification.id = `notification-${id}`;
+        notification.style.viewTransitionName = `notification-${type}-transition`;
+
+        const icons = {
+            info: '💬',
+            success: '✅',
+            warning: '⚠️',
+            error: '❌'
+        };
+
+        notification.innerHTML = `
+            <span class="notification-icon">${icons[type] || '💬'}</span>
+            <span class="notification-message">${message}</span>
+            <span class="notification-close" onclick="dismissNotification(${id})">&times;</span>
+        `;
+
+        // Add click handler for the notification itself
+        notification.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('notification-close')) {
+                dismissNotification(id);
+            }
+        });
+
+        container.appendChild(notification);
+
+        // Auto-dismiss after duration
+        setTimeout(() => {
+            if (notification.parentNode) {
+                dismissNotification(id);
+            }
+        }, duration);
+
+        return id;
+    }
+
+    function dismissNotification(id) {
+        const notification = document.getElementById(`notification-${id}`);
+        if (!notification) return;
+
+        if (isSupported) {
+            notification.startViewTransition(() => {
+                notification.remove();
+            });
+        } else {
+            notification.style.animation = 'notification-slide-out 0.3s ease forwards';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }
+    }
+
+    function showRandomNotification() {
+        const messages = [
+            'Someone liked your post!',
+            'New comment on your photo',
+            'Your post is trending! 🔥',
+            'Friend request accepted',
+            'Message from Sarah',
+            'Post shared successfully',
+            'New follower: @johndoe',
+            'Photo liked by 5 people'
+        ];
+
+        const types = ['info', 'success', 'warning'];
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        const randomType = types[Math.floor(Math.random() * types.length)];
+
+        createNotification(randomMessage, randomType);
+    }
+
+    // Make functions globally available for onclick handlers
+    window.dismissNotification = dismissNotification;
+    window.showRandomNotification = showRandomNotification;
+
     const createPostBtn = document.getElementById('create-post-btn');
     const createPostModal = document.getElementById('create-post-modal');
     const modalClose = document.getElementById('modal-close');
@@ -493,6 +579,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Add particle burst effect
                     createParticleBurst(likeBtn);
+
+                    // Show notification
+                    createNotification('Post liked! ❤️', 'success');
                 }
             });
         } else {
@@ -590,6 +679,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update comment count
         const currentCount = parseInt(commentCount.textContent) || 0;
         commentCount.textContent = currentCount + 1;
+
+        // Show notification
+        createNotification('Comment added! 💬', 'info');
     }
 
     // Special handling for share actions (show share sheet)
@@ -659,6 +751,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Show feedback (you could replace this with actual sharing functionality)
         showShareFeedback(messages[shareType] || 'Shared!');
+
+        // Show notification
+        createNotification(messages[shareType] || 'Post shared!', 'success');
 
         // Hide share sheet
         setTimeout(() => {
