@@ -252,10 +252,12 @@ document.addEventListener('DOMContentLoaded', () => {
         newPost.id = `post${postCount}`;
         newPost.style.contain = 'layout';
         newPost.style.viewTransitionName = `post${postCount}-transition`;
+        newPost.setAttribute('onclick', `togglePostExpansion('post${postCount}')`);
 
         // Use current user (could be made dynamic)
         const author = 'You';
         const avatarColor = '007bff';
+        const randomSeed = ['userpost1', 'userpost2', 'userpost3'][Math.floor(Math.random() * 3)];
 
         newPost.innerHTML = `
             <div class="post-header">
@@ -266,19 +268,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             <p class="content">${content}</p>
+            <img src="${createPlaceholderImage(300, 200, randomSeed)}" alt="User post" class="post-image" style="view-transition-name: image-${postCount};">
             <div class="actions">
-                <button class="update-post" data-post="${postCount}">Like</button>
-                <span class="likes">0 likes</span>
+                <button class="action-btn like-btn" data-post="${postCount}" data-action="like" data-liked="false">
+                    <span class="heart-icon">🤍</span>
+                    <span class="like-count">0</span>
+                </button>
+                <button class="action-btn comment-btn" data-post="${postCount}" data-action="comment">💬 Comment</button>
+                <span class="comments">0</span>
+                <button class="action-btn share-btn" data-post="${postCount}" data-action="share">📤 Share</button>
+                <span class="shares">0</span>
+            </div>
+            <div class="comments-section" id="comments-${postCount}" style="display: none;">
+                <div class="comment-input">
+                    <img src="https://picsum.photos/seed/user/32/32" alt="You" class="comment-avatar">
+                    <input type="text" class="comment-field" placeholder="Write a comment..." data-post="${postCount}">
+                </div>
+                <div class="comments-list">
+                    <!-- Comments will be populated dynamically -->
+                </div>
             </div>
         `;
 
         // Insert at the top of the feed
         mainElement.insertBefore(newPost, mainElement.firstElementChild);
 
-        // Attach event listener
-        newPost.querySelector('.update-post').addEventListener('click', function() {
-            const postId = this.dataset.post;
-            updatePost(newPost, postId);
+        // Attach event listeners to action buttons
+        newPost.querySelectorAll('.action-btn').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.stopPropagation();
+                const postId = this.dataset.post;
+                const action = this.dataset.action;
+                handleAction(newPost, postId, action);
+            });
         });
 
         // Smooth scroll to top
@@ -339,10 +361,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add view transition name
             newPost.style.viewTransitionName = `post${postCount}-transition`;
 
-            // Attach event listener to new post
-            newPost.querySelector('.update-post').addEventListener('click', function() {
-                const postId = this.dataset.post;
-                updatePost(newPost, postId);
+            // Attach event listeners to new post action buttons
+            newPost.querySelectorAll('.action-btn').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    const postId = this.dataset.post;
+                    const action = this.dataset.action;
+                    handleAction(newPost, postId, action);
+                });
             });
 
             loadingMore.classList.add('hidden');
@@ -353,12 +379,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function createNewPost(id) {
         const authors = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'];
         const contents = [
-            'Amazing day at the beach! 🏖️',
-            'New book recommendations? 📚',
-            'Weekend hiking adventures! ⛰️',
-            'Cooking experiments in progress! 👩‍🍳',
-            'Music discovery of the week! 🎵',
-            'Tech tips and tricks! 💻'
+            'Amazing day at the beach! 🏖️ The waves were perfect for surfing.',
+            'New book recommendations? 📚 I just finished an incredible mystery novel.',
+            'Weekend hiking adventures! ⛰️ The trails were challenging but rewarding.',
+            'Cooking experiments in progress! 👩‍🍳 Trying fusion cuisine tonight.',
+            'Music discovery of the week! 🎵 This new artist has blown me away.',
+            'Tech tips and tricks! 💻 Productivity shortcuts that changed my workflow.'
         ];
         const seeds = ['beach', 'books', 'hiking', 'cooking', 'music', 'tech'];
 
@@ -370,6 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
         post.className = 'post';
         post.id = `post${id}`;
         post.style.contain = 'layout';
+        post.setAttribute('onclick', `togglePostExpansion('post${id}')`);
         post.innerHTML = `
             <div class="post-header">
                 <img src="${createPlaceholderAvatar(author.toLowerCase(), 40)}" alt="${author}" class="avatar">
@@ -379,10 +406,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             <p class="content">${content}</p>
-            <img src="${createPlaceholderImage(300, 200, seed)}" alt="${content.split(' ')[0]}" class="post-image">
+            <img src="${createPlaceholderImage(300, 200, seed)}" alt="${content.split(' ')[0]}" class="post-image" style="view-transition-name: image-${id};">
             <div class="actions">
-                <button class="update-post" data-post="${id}">Like</button>
-                <span class="likes">${Math.floor(Math.random() * 20) + 1} likes</span>
+                <button class="action-btn like-btn" data-post="${id}" data-action="like" data-liked="false">
+                    <span class="heart-icon">🤍</span>
+                    <span class="like-count">${Math.floor(Math.random() * 20) + 1}</span>
+                </button>
+                <button class="action-btn comment-btn" data-post="${id}" data-action="comment">💬 Comment</button>
+                <span class="comments">${Math.floor(Math.random() * 10)}</span>
+                <button class="action-btn share-btn" data-post="${id}" data-action="share">📤 Share</button>
+                <span class="shares">${Math.floor(Math.random() * 5)}</span>
+            </div>
+            <div class="comments-section" id="comments-${id}" style="display: none;">
+                <div class="comment-input">
+                    <img src="https://picsum.photos/seed/user/32/32" alt="You" class="comment-avatar">
+                    <input type="text" class="comment-field" placeholder="Write a comment..." data-post="${id}">
+                </div>
+                <div class="comments-list">
+                    <!-- Comments will be populated dynamically -->
+                </div>
             </div>
         `;
         return post;
@@ -454,11 +496,25 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="time">Just now</span>
                         </div>
                     </div>
-                    <p class="content">Refreshed! Just tried an amazing new brew! ☕✨</p>
-                    <img src="${createPlaceholderImage(300, 200, 'newcoffee')}" alt="New coffee experience" class="post-image">
+                    <p class="content">Refreshed! Just tried an amazing new brew with unique flavors! ☕✨ The barista recommended it and it was perfect.</p>
+                    <img src="${createPlaceholderImage(300, 200, 'newcoffee')}" alt="New coffee experience" class="post-image" style="view-transition-name: image-1;">
                     <div class="actions">
-                        <button class="update-post" data-post="1">Like +1</button>
-                        <span class="likes">15 likes</span>
+                        <button class="action-btn like-btn" data-post="1" data-action="like" data-liked="false">
+                            <span class="heart-icon">❤️</span>
+                            <span class="like-count">15</span>
+                        </button>
+                        <button class="action-btn comment-btn" data-post="1" data-action="comment">💬 Comment</button>
+                        <span class="comments">5</span>
+                        <button class="action-btn share-btn" data-post="1" data-action="share">📤 Share</button>
+                        <span class="shares">3</span>
+                    </div>
+                    <div class="comments-section" id="comments-1" style="display: none;">
+                        <div class="comment-input">
+                            <img src="https://picsum.photos/seed/user/32/32" alt="You" class="comment-avatar">
+                            <input type="text" class="comment-field" placeholder="Write a comment..." data-post="1">
+                        </div>
+                        <div class="comments-list">
+                        </div>
                     </div>
                 `;
             } else if (postId == 2) {
@@ -470,11 +526,25 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="time">Just now</span>
                         </div>
                     </div>
-                    <p class="content">Fresh sunset vibes! 🌅🔥</p>
-                    <img src="${createPlaceholderImage(300, 200, 'freshsunset')}" alt="Fresh sunset" class="post-image">
+                    <p class="content">Fresh sunset vibes with incredible colors! 🌅🔥 The sky was on fire with oranges and pinks.</p>
+                    <img src="${createPlaceholderImage(300, 200, 'freshsunset')}" alt="Fresh sunset" class="post-image" style="view-transition-name: image-2;">
                     <div class="actions">
-                        <button class="update-post" data-post="2">Comment</button>
-                        <span class="comments">6 comments</span>
+                        <button class="action-btn like-btn" data-post="2" data-action="like" data-liked="false">
+                            <span class="heart-icon">🤍</span>
+                            <span class="like-count">10</span>
+                        </button>
+                        <button class="action-btn comment-btn" data-post="2" data-action="comment">💬 Comment</button>
+                        <span class="comments">6</span>
+                        <button class="action-btn share-btn" data-post="2" data-action="share">📤 Share</button>
+                        <span class="shares">2</span>
+                    </div>
+                    <div class="comments-section" id="comments-2" style="display: none;">
+                        <div class="comment-input">
+                            <img src="https://picsum.photos/seed/user/32/32" alt="You" class="comment-avatar">
+                            <input type="text" class="comment-field" placeholder="Write a comment..." data-post="2">
+                        </div>
+                        <div class="comments-list">
+                        </div>
                     </div>
                 `;
             } else if (postId == 3) {
@@ -486,11 +556,25 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="time">Just now</span>
                         </div>
                     </div>
-                    <p class="content">Updated recipe: Even better pasta! 🍝👨‍🍳</p>
-                    <img src="${createPlaceholderImage(300, 200, 'updatedpasta')}" alt="Updated pasta recipe" class="post-image">
+                    <p class="content">Updated recipe: Even better pasta with fresh ingredients! 🍝👨‍🍳 Added truffle oil for extra flavor.</p>
+                    <img src="${createPlaceholderImage(300, 200, 'updatedpasta')}" alt="Updated pasta recipe" class="post-image" style="view-transition-name: image-3;">
                     <div class="actions">
-                        <button class="update-post" data-post="3">Share</button>
-                        <span class="shares">8 shares</span>
+                        <button class="action-btn like-btn" data-post="3" data-action="like" data-liked="false">
+                            <span class="heart-icon">🤍</span>
+                            <span class="like-count">20</span>
+                        </button>
+                        <button class="action-btn comment-btn" data-post="3" data-action="comment">💬 Comment</button>
+                        <span class="comments">8</span>
+                        <button class="action-btn share-btn" data-post="3" data-action="share">📤 Share</button>
+                        <span class="shares">8</span>
+                    </div>
+                    <div class="comments-section" id="comments-3" style="display: none;">
+                        <div class="comment-input">
+                            <img src="https://picsum.photos/seed/user/32/32" alt="You" class="comment-avatar">
+                            <input type="text" class="comment-field" placeholder="Write a comment..." data-post="3">
+                        </div>
+                        <div class="comments-list">
+                        </div>
                     </div>
                 `;
             }
@@ -501,10 +585,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         post.innerHTML = newContent;
                         // Re-attach event listeners
                         post.querySelectorAll('.action-btn').forEach(btn => {
-                            btn.addEventListener('click', function() {
+                            btn.addEventListener('click', function(event) {
+                                event.stopPropagation();
                                 const action = this.dataset.action;
                                 const btnPostId = this.dataset.post;
-                                const btnPost = posts[btnPostId];
+                                const btnPost = document.getElementById(`post${btnPostId}`);
                                 handleAction(btnPost, btnPostId, action);
                             });
                         });
@@ -514,10 +599,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 manualTransition(post, () => {
                     post.innerHTML = newContent;
                     post.querySelectorAll('.action-btn').forEach(btn => {
-                        btn.addEventListener('click', function() {
+                        btn.addEventListener('click', function(event) {
+                            event.stopPropagation();
                             const action = this.dataset.action;
                             const btnPostId = this.dataset.post;
-                            const btnPost = posts[btnPostId];
+                            const btnPost = document.getElementById(`post${btnPostId}`);
                             handleAction(btnPost, btnPostId, action);
                         });
                     });

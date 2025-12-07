@@ -18,6 +18,7 @@
 {"type":"entity","name":"MobileNavigation","entityType":"Feature","observations":["Fixed bottom navigation with dynamic viewport height (100dvh)","Safe area support for iOS notches and home indicators","Horizontal flexbox layout with justify-content: space-around","Touch-friendly 44px minimum targets","Cross-platform compatibility for iOS Safari and Android Chrome"]}
 {"type":"entity","name":"ScrollLocking","entityType":"Utility","observations":["Counter-based system to manage multiple overlays","Prevents background scrolling when modals or share sheets are open","Improves focus management and accessibility"]}
 {"type":"entity","name":"Issue251209","entityType":"Issue","observations":["Phase 5: Post Detail Expansion","Status: Open","Focus: Enable post expansion with full content view, image morphing to larger size, smooth content area expansions, showcase complex multi-element transitions, add navigation layout fixes for horizontal alignment"]}
+{"type":"entity","name":"PostExpansion","entityType":"Feature","observations":["Implemented in Phase 5","Enables post expansion with full content view","Includes image morphing to larger size","Smooth content area expansions","Showcases complex multi-element transitions","Uses scoped transitions for morphing","Includes progressive enhancement with fallbacks","Only one post expanded at a time","Cursor pointer indicates interactivity"]}
 {"type":"relation","from":"WebUXUIDemo","to":"ScopedViewTransitionsDemo","relationType":"contains"}
 {"type":"relation","from":"ScopedViewTransitionsDemo","to":"ScopedViewTransitions","relationType":"uses"}
 {"type":"relation","from":"ScopedViewTransitionsDemo","to":"HTML","relationType":"uses"}
@@ -39,3 +40,4 @@
 {"type":"relation","from":"ShareSheet","to":"ScrollLocking","relationType":"uses"}
 {"type":"relation","from":"ScopedViewTransitionsDemo","to":"ScrollLocking","relationType":"uses"}
 {"type":"relation","from":"ScopedViewTransitionsDemo","to":"Issue251209","relationType":"hasIssue"}
+{"type":"relation","from":"ScopedViewTransitionsDemo","to":"PostExpansion","relationType":"implements"}
