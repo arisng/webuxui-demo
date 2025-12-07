@@ -152,6 +152,26 @@
             Loading more posts...
         </div>
     </main>
+
+    <!-- Details View -->
+    <div id="details-view" class="details-view" style="display: none;">
+        <header id="details-header" class="details-header" style="contain: layout;">
+            <button class="back-btn" onclick="goBackToFeed()">← Back</button>
+            <h1>Post Details</h1>
+        </header>
+        <div class="details-content">
+            <article id="details-post" class="details-post">
+                <!-- Post content will be populated here -->
+            </article>
+            <div class="related-posts">
+                <h3>Related Posts</h3>
+                <div class="related-list">
+                    <!-- Related posts will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <nav id="bottom-nav" style="contain: layout;">
         <button class="nav-item active" data-tab="home">
             <span class="nav-icon">🏠</span>

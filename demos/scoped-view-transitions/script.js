@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const bottomNav = document.getElementById('bottom-nav');
 
+    // Variable to save scroll position for back navigation
+    let savedScrollPosition = 0;
+
     // Fallback function for manual transitions
     function manualTransition(element, callback, duration = 600) {
         const originalTransition = element.style.transition;
@@ -793,48 +796,126 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Function to toggle post expansion
+    // Function to navigate to post details view
     function togglePostExpansion(postId) {
         const post = document.getElementById(postId);
-        const isExpanded = post.classList.contains('expanded');
+        const detailsView = document.getElementById('details-view');
+        const detailsPost = document.getElementById('details-post');
+        const mainElement = document.querySelector('main');
+        const header = document.getElementById('header');
+        const bottomNav = document.getElementById('bottom-nav');
 
-        // Close any other expanded posts
-        document.querySelectorAll('.post.expanded').forEach(expandedPost => {
-            if (expandedPost.id !== postId) {
-                if (isSupported) {
-                    expandedPost.startViewTransition(() => {
-                        expandedPost.classList.remove('expanded');
-                    });
-                } else {
-                    manualTransition(expandedPost, () => {
-                        expandedPost.classList.remove('expanded');
-                    }, 400);
-                }
-            }
-        });
+        // Save current scroll position
+        savedScrollPosition = mainElement.scrollTop;
+
+        // Populate details view with post content
+        populateDetailsView(post);
 
         if (isSupported) {
-            // Use scoped view transitions for post expansion
-            post.startViewTransition(() => {
-                if (isExpanded) {
-                    post.classList.remove('expanded');
-                } else {
-                    post.classList.add('expanded');
-                }
+            // Use view transitions for page navigation
+            document.startViewTransition(() => {
+                // Hide feed, show details
+                mainElement.style.display = 'none';
+                header.style.display = 'none';
+                bottomNav.style.display = 'none';
+                detailsView.style.display = 'block';
+
+                // Set view transition names for smooth transition
+                post.style.viewTransitionName = 'details-post-transition';
+                detailsPost.style.viewTransitionName = 'details-post-transition';
             });
         } else {
-            // Fallback for browsers without scoped transitions
-            manualTransition(post, () => {
-                if (isExpanded) {
-                    post.classList.remove('expanded');
-                } else {
-                    post.classList.add('expanded');
-                }
-            }, 400);
+            // Fallback
+            mainElement.style.display = 'none';
+            header.style.display = 'none';
+            bottomNav.style.display = 'none';
+            detailsView.style.display = 'block';
         }
     }
 
-    // Make togglePostExpansion global
+    // Function to populate details view
+    function populateDetailsView(post) {
+        const detailsPost = document.getElementById('details-post');
+        const relatedList = document.querySelector('.related-list');
+
+        // Clone the post content and enhance it
+        const postClone = post.cloneNode(true);
+        postClone.id = 'details-post-content';
+        postClone.className = 'details-post-content';
+
+        // Remove onclick to prevent recursion
+        postClone.removeAttribute('onclick');
+
+        // Expand comments by default in details
+        const commentsSection = postClone.querySelector('.comments-section');
+        if (commentsSection) {
+            commentsSection.style.display = 'block';
+        }
+
+        // Add more detailed content
+        const content = postClone.querySelector('.content');
+        if (content) {
+            content.innerHTML += '<br><br>This is additional content that would appear in the full article view. Here you can include more details, background information, or extended thoughts about the topic. The details view allows for a more immersive reading experience with better typography and layout.';
+        }
+
+        // Clear and populate details post
+        detailsPost.innerHTML = '';
+        detailsPost.appendChild(postClone);
+
+        // Populate related posts
+        relatedList.innerHTML = '';
+        const relatedPosts = [
+            { author: 'Bob', text: 'Beautiful sunset today! 🌅', image: 'sunset' },
+            { author: 'Charlie', text: 'New recipe alert! 🍝', image: 'pasta' },
+            { author: 'Diana', text: 'Weekend hiking adventure! 🥾', image: 'hiking' }
+        ];
+
+        relatedPosts.forEach(related => {
+            const relatedElement = document.createElement('div');
+            relatedElement.className = 'related-post';
+            relatedElement.innerHTML = `
+                <img src="${createPlaceholderImage(60, 60, related.image)}" alt="${related.text}">
+                <div class="related-content">
+                    <div class="related-author">${related.author}</div>
+                    <div class="related-text">${related.text}</div>
+                </div>
+            `;
+            relatedList.appendChild(relatedElement);
+        });
+    }
+
+    // Function to go back to feed
+    function goBackToFeed() {
+        const detailsView = document.getElementById('details-view');
+        const mainElement = document.querySelector('main');
+        const header = document.getElementById('header');
+        const bottomNav = document.getElementById('bottom-nav');
+
+        if (isSupported) {
+            // Use view transitions for page navigation
+            document.startViewTransition(() => {
+                // Hide details, show feed
+                detailsView.style.display = 'none';
+                mainElement.style.display = 'block';
+                header.style.display = 'block';
+                bottomNav.style.display = 'block';
+
+                // Restore scroll position
+                mainElement.scrollTop = savedScrollPosition;
+            });
+        } else {
+            // Fallback
+            detailsView.style.display = 'none';
+            mainElement.style.display = 'block';
+            header.style.display = 'block';
+            bottomNav.style.display = 'block';
+            mainElement.scrollTop = savedScrollPosition;
+        }
+    }
+
+    // Make functions global
     window.togglePostExpansion = togglePostExpansion;
+    window.goBackToFeed = goBackToFeed;
 
     // Handle share option clicks
     document.querySelectorAll('.share-option').forEach(option => {
