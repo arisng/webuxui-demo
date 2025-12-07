@@ -931,5 +931,51 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Mobile viewport handling for dynamic address bar
+    function handleViewportChanges() {
+        let currentHeight = window.innerHeight;
+
+        const updateViewportHeight = () => {
+            const newHeight = window.innerHeight;
+            const heightChanged = Math.abs(newHeight - currentHeight) > 100; // Significant change
+
+            if (heightChanged) {
+                // Update CSS custom property for dynamic height
+                document.documentElement.style.setProperty('--vh', `${newHeight * 0.01}px`);
+                currentHeight = newHeight;
+
+                // Force layout recalculation for fixed elements
+                const nav = document.getElementById('bottom-nav');
+                if (nav) {
+                    nav.style.transform = 'translateZ(0)';
+                    setTimeout(() => {
+                        nav.style.transform = '';
+                    }, 10);
+                }
+            }
+        };
+
+        // Set initial value
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+
+        // Listen for viewport changes
+        window.addEventListener('resize', updateViewportHeight);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(updateViewportHeight, 100);
+        });
+
+        // iOS Safari specific handling
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+            window.addEventListener('focusin', () => {
+                setTimeout(updateViewportHeight, 300);
+            });
+            window.addEventListener('focusout', () => {
+                setTimeout(updateViewportHeight, 300);
+            });
+        }
+    }
+
+    handleViewportChanges();
+
     attachNavListeners();
 });
