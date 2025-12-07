@@ -65,13 +65,15 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('Scoped View Transitions not supported. Using fallback animations.');
     }
 
-    // Handle action buttons (like, comment, share)
-    document.querySelectorAll('.action-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const postId = this.dataset.post;
-            const action = this.dataset.action;
-            const post = posts[postId];
-            handleAction(post, postId, action);
+    // Handle comment input submissions
+    document.querySelectorAll('.comment-field').forEach(input => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && this.value.trim()) {
+                const postId = this.dataset.post;
+                const commentText = this.value.trim();
+                addNewComment(postId, commentText);
+                this.value = '';
+            }
         });
     });
 
@@ -412,17 +414,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Helper function for handling action button clicks
     function handleAction(post, postId, action) {
-        const actionMap = {
-            like: '.like-count',
-            comment: '.comments',
-            share: '.shares'
-        };
-
         if (action === 'like') {
             handleLikeAction(post, postId);
+        } else if (action === 'comment') {
+            handleCommentAction(post, postId);
         } else {
-            // Handle other actions (comment, share)
-            const counterElement = post.querySelector(actionMap[action]);
+            // Handle other actions (share)
+            const counterElement = post.querySelector('.shares');
             if (counterElement) {
                 const currentCount = parseInt(counterElement.textContent) || 0;
                 counterElement.textContent = currentCount + 1;
@@ -488,6 +486,81 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 600);
             }
         }
+    }
+
+    // Special handling for comment actions (expand/collapse)
+    function handleCommentAction(post, postId) {
+        const commentsSection = document.getElementById(`comments-${postId}`);
+        const isVisible = commentsSection.style.display !== 'none';
+
+        if (isSupported) {
+            // Use scoped view transitions for smooth expand/collapse
+            commentsSection.style.viewTransitionName = `comments-${postId}-transition`;
+
+            commentsSection.startViewTransition(() => {
+                if (isVisible) {
+                    // Collapse comments
+                    commentsSection.style.display = 'none';
+                } else {
+                    // Expand comments
+                    commentsSection.style.display = 'block';
+                }
+            });
+        } else {
+            // Fallback for browsers without scoped transitions
+            if (isVisible) {
+                commentsSection.style.display = 'none';
+            } else {
+                commentsSection.style.display = 'block';
+                // Add simple fade-in animation for comments
+                const comments = commentsSection.querySelectorAll('.comment');
+                comments.forEach((comment, index) => {
+                    comment.style.opacity = '0';
+                    comment.style.transform = 'translateY(10px)';
+                    setTimeout(() => {
+                        comment.style.transition = 'all 0.3s ease';
+                        comment.style.opacity = '1';
+                        comment.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+            }
+        }
+    }
+
+    // Add a new comment to a post
+    function addNewComment(postId, commentText) {
+        const commentsList = document.querySelector(`#comments-${postId} .comments-list`);
+        const commentCount = document.querySelector(`[data-post="${postId}"].action-btn + .comments`);
+
+        // Create new comment element
+        const newComment = document.createElement('div');
+        newComment.className = 'comment';
+        newComment.innerHTML = `
+            <img src="https://picsum.photos/seed/user/32/32" alt="You" class="comment-avatar">
+            <div class="comment-content">
+                <span class="comment-author">You</span>
+                <span class="comment-time">Just now</span>
+                <p class="comment-text">${commentText}</p>
+            </div>
+        `;
+
+        // Add animation to new comment
+        newComment.style.opacity = '0';
+        newComment.style.transform = 'translateY(10px)';
+
+        // Insert at the top of comments list
+        commentsList.insertBefore(newComment, commentsList.firstChild);
+
+        // Animate in the new comment
+        setTimeout(() => {
+            newComment.style.transition = 'all 0.3s ease';
+            newComment.style.opacity = '1';
+            newComment.style.transform = 'translateY(0)';
+        }, 10);
+
+        // Update comment count
+        const currentCount = parseInt(commentCount.textContent) || 0;
+        commentCount.textContent = currentCount + 1;
     }
 
     // Create particle burst effect for likes
