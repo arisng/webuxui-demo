@@ -77,6 +77,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Handle action buttons (like, comment, share)
+    document.querySelectorAll('.action-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const postId = this.dataset.post;
+            const action = this.dataset.action;
+            const post = posts[postId];
+            handleAction(post, postId, action);
+        });
+    });
+
     // Post creation modal functionality
     const createPostBtn = document.getElementById('create-post-btn');
     const createPostModal = document.getElementById('create-post-modal');
