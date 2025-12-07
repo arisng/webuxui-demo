@@ -87,7 +87,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Post creation modal functionality
+    // Scroll lock management
+    let scrollLockCount = 0;
+
+    function lockScroll() {
+        scrollLockCount++;
+        if (scrollLockCount === 1) {
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function unlockScroll() {
+        scrollLockCount = Math.max(0, scrollLockCount - 1);
+        if (scrollLockCount === 0) {
+            document.body.style.overflow = '';
+        }
+    }
     const createPostBtn = document.getElementById('create-post-btn');
     const createPostModal = document.getElementById('create-post-modal');
     const modalClose = document.getElementById('modal-close');
@@ -97,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Open modal
     createPostBtn.addEventListener('click', () => {
+        lockScroll();
         if (isSupported) {
             createPostModal.startViewTransition(() => {
                 createPostModal.classList.add('visible');
@@ -110,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Close modal functions
     function closeModal() {
+        unlockScroll();
         if (isSupported) {
             createPostModal.startViewTransition(() => {
                 createPostModal.classList.remove('visible');
@@ -580,6 +597,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const shareSheetOverlay = document.getElementById('share-sheet-overlay');
         const shareSheet = document.getElementById('share-sheet');
 
+        // Lock scroll when overlay is shown
+        lockScroll();
+
         if (isSupported) {
             // Use scoped view transitions for share sheet appearance
             shareSheet.style.viewTransitionName = `share-sheet-${postId}-transition`;
@@ -620,6 +640,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             shareSheetOverlay.classList.remove('visible');
         }
+
+        // Unlock scroll when overlay is hidden
+        unlockScroll();
     }
 
     // Handle individual share options
