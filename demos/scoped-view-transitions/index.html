@@ -17,54 +17,72 @@
         </div>
         <article id="post1" class="post" style="contain: layout;">
             <div class="post-header">
-                <img src="https://via.placeholder.com/40x40/FF6B6B/FFFFFF?text=A" alt="Alice" class="avatar">
+                <img src="https://picsum.photos/seed/alice/40/40" alt="Alice" class="avatar">
                 <div class="author-info">
                     <span class="author">Alice</span>
                     <span class="time">2h ago</span>
                 </div>
             </div>
             <p class="content">Just tried the new coffee shop downtown! ☕ The latte art is amazing.</p>
-            <img src="https://via.placeholder.com/300x200/4ECDC4/FFFFFF?text=Coffee+Shop" alt="Coffee shop latte art" class="post-image">
+            <img src="https://picsum.photos/seed/coffee/300/200" alt="Coffee shop latte art" class="post-image">
             <div class="actions">
-                <button class="update-post" data-post="1">Like +1</button>
-                <span class="likes">12 likes</span>
+                <button class="action-btn like-btn" data-post="1" data-action="like" data-liked="false">
+                    <span class="heart-icon">🤍</span>
+                    <span class="like-count">12</span>
+                </button>
+                <button class="action-btn comment-btn" data-post="1" data-action="comment">💬 Comment</button>
+                <span class="comments">0</span>
+                <button class="action-btn share-btn" data-post="1" data-action="share">📤 Share</button>
+                <span class="shares">0</span>
             </div>
         </article>
         <article id="post2" class="post" style="contain: layout;">
             <div class="post-header">
-                <img src="https://via.placeholder.com/40x40/45B7D1/FFFFFF?text=B" alt="Bob" class="avatar">
+                <img src="https://picsum.photos/seed/bob/40/40" alt="Bob" class="avatar">
                 <div class="author-info">
                     <span class="author">Bob</span>
                     <span class="time">4h ago</span>
                 </div>
             </div>
             <p class="content">Beautiful sunset today! 🌅</p>
-            <img src="https://via.placeholder.com/300x200/FFA07A/FFFFFF?text=Sunset" alt="Beautiful sunset" class="post-image">
+            <img src="https://picsum.photos/seed/sunset/300/200" alt="Beautiful sunset" class="post-image">
             <div class="actions">
-                <button class="update-post" data-post="2">Comment</button>
-                <span class="comments">3 comments</span>
+                <button class="action-btn like-btn" data-post="2" data-action="like" data-liked="false">
+                    <span class="heart-icon">🤍</span>
+                    <span class="like-count">8</span>
+                </button>
+                <button class="action-btn comment-btn" data-post="2" data-action="comment">💬 Comment</button>
+                <span class="comments">3</span>
+                <button class="action-btn share-btn" data-post="2" data-action="share">📤 Share</button>
+                <span class="shares">1</span>
             </div>
         </article>
         <article id="post3" class="post" style="contain: layout;">
             <div class="post-header">
-                <img src="https://via.placeholder.com/40x40/98D8C8/FFFFFF?text=C" alt="Charlie" class="avatar">
+                <img src="https://picsum.photos/seed/charlie/40/40" alt="Charlie" class="avatar">
                 <div class="author-info">
                     <span class="author">Charlie</span>
                     <span class="time">6h ago</span>
                 </div>
             </div>
             <p class="content">New recipe alert! Made the best pasta ever. 🍝</p>
-            <img src="https://via.placeholder.com/300x200/F7DC6F/FFFFFF?text=Pasta" alt="Delicious pasta" class="post-image">
+            <img src="https://picsum.photos/seed/pasta/300/200" alt="Delicious pasta" class="post-image">
             <div class="actions">
-                <button class="update-post" data-post="3">Share</button>
-                <span class="shares">5 shares</span>
+                <button class="action-btn like-btn" data-post="3" data-action="like" data-liked="false">
+                    <span class="heart-icon">🤍</span>
+                    <span class="like-count">15</span>
+                </button>
+                <button class="action-btn comment-btn" data-post="3" data-action="comment">💬 Comment</button>
+                <span class="comments">2</span>
+                <button class="action-btn share-btn" data-post="3" data-action="share">📤 Share</button>
+                <span class="shares">5</span>
             </div>
         </article>
+        <div id="loading-more" class="loading-more hidden">
+            <div class="loading-spinner"></div>
+            Loading more posts...
+        </div>
     </main>
-    <div id="loading-more" class="loading-more hidden">
-        <div class="loading-spinner"></div>
-        Loading more posts...
-    </div>
     <nav id="bottom-nav" style="contain: layout;">
         <button class="nav-item active" data-tab="home">Home</button>
         <button class="nav-item" data-tab="search">Search</button>
