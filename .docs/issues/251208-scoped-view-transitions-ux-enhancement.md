@@ -61,10 +61,11 @@ Transform the demo into a stunning showcase of Scoped View Transitions by implem
 
 #### Phase 5: Post Detail Expansion
 
-- Enable post expansion with full content view
-- Implement image morphing to larger size
-- Add smooth content area expansions
-- Showcase complex multi-element transitions
+- [ ] Enable post expansion with full content view
+- [ ] Implement image morphing to larger size
+- [ ] Add smooth content area expansions
+- [ ] Showcase complex multi-element transitions
+- [ ] Add navigation layout fixes for horizontal alignment
 
 ### Requirements
 
@@ -94,7 +95,7 @@ Transform the demo into a stunning showcase of Scoped View Transitions by implem
 - **HTML Structure**: Additional elements for comments, share options, notifications
 - **Performance Optimizations**: GPU-accelerated animations for smooth 60fps
 - **UX Improvements**: Scroll locking for overlays, counter-based modal management
-- **Mobile Navigation**: Fixed bottom nav with dynamic viewport height, safe area support
+- **Mobile Navigation**: Fixed bottom nav with dynamic viewport height, safe area support, horizontal layout
 
 ### Technical Implementation Details
 
@@ -237,6 +238,8 @@ post.startViewTransition(() => {
 - **User Feedback**: Real-time notifications enhance perceived responsiveness and engagement
 - **Mobile Navigation**: Fixed bottom nav requires dynamic viewport height and safe area handling
 - **Cross-Platform Mobile**: iOS and Android need different approaches for address bar and safe areas
+- **Navigation Layout**: Flexbox with justify-content: space-around creates perfect horizontal button distribution
+- **Touch Targets**: 44px minimum size ensures accessibility across all devices
 - **Pro tip**: This implementation also prevents the common iOS Safari bounce scrolling issue when modals are open
 
 ### Prevention
@@ -252,6 +255,7 @@ post.startViewTransition(() => {
 - [ ] Use dynamic viewport height (100dvh) for mobile browsers with address bars
 - [ ] Implement safe area insets for iOS devices with notches/home indicators
 - [ ] Test fixed navigation positioning across different mobile browsers
+- [ ] Ensure navigation uses flexbox for proper horizontal button layout
 
 ### Related
 
