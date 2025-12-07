@@ -48,80 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update individual posts
     document.querySelectorAll('.update-post').forEach(button => {
-        button.addEventListener('click', () => {
-            const postId = button.dataset.post;
+        button.addEventListener('click', function() {
+            const postId = this.dataset.post;
             const post = posts[postId];
-            let newContent = '';
-
-            if (postId == 1) {
-                newContent = `
-                    <div class="post-header">
-                        <img src="https://via.placeholder.com/40x40/FF6B6B/FFFFFF?text=A" alt="Alice" class="avatar">
-                        <div class="author-info">
-                            <span class="author">Alice</span>
-                            <span class="time">2h ago</span>
-                        </div>
-                    </div>
-                    <p class="content">Just tried the new coffee shop downtown! ☕ The latte art is amazing.</p>
-                    <img src="https://via.placeholder.com/300x200/4ECDC4/FFFFFF?text=Coffee+Shop" alt="Coffee shop latte art" class="post-image">
-                    <div class="actions">
-                        <button class="update-post" data-post="1">Like +1</button>
-                        <span class="likes">13 likes</span>
-                    </div>
-                `;
-            } else if (postId == 2) {
-                newContent = `
-                    <div class="post-header">
-                        <img src="https://via.placeholder.com/40x40/45B7D1/FFFFFF?text=B" alt="Bob" class="avatar">
-                        <div class="author-info">
-                            <span class="author">Bob</span>
-                            <span class="time">4h ago</span>
-                        </div>
-                    </div>
-                    <p class="content">Beautiful sunset today! 🌅</p>
-                    <img src="https://via.placeholder.com/300x200/FFA07A/FFFFFF?text=Sunset" alt="Beautiful sunset" class="post-image">
-                    <div class="actions">
-                        <button class="update-post" data-post="2">Comment</button>
-                        <span class="comments">4 comments</span>
-                    </div>
-                `;
-            } else if (postId == 3) {
-                newContent = `
-                    <div class="post-header">
-                        <img src="https://via.placeholder.com/40x40/98D8C8/FFFFFF?text=C" alt="Charlie" class="avatar">
-                        <div class="author-info">
-                            <span class="author">Charlie</span>
-                            <span class="time">6h ago</span>
-                        </div>
-                    </div>
-                    <p class="content">New recipe alert! Made the best pasta ever. 🍝</p>
-                    <img src="https://via.placeholder.com/300x200/F7DC6F/FFFFFF?text=Pasta" alt="Delicious pasta" class="post-image">
-                    <div class="actions">
-                        <button class="update-post" data-post="3">Share</button>
-                        <span class="shares">6 shares</span>
-                    </div>
-                `;
-            }
-
-            if (isSupported) {
-                post.startViewTransition({
-                    callback: () => {
-                        post.innerHTML = createSkeleton();
-                        setTimeout(() => {
-                            post.innerHTML = newContent;
-                        }, 1000); // Simulate loading time
-                    }
-                });
-            } else {
-                manualTransition(post, () => {
-                    post.innerHTML = createSkeleton();
-                    setTimeout(() => {
-                        manualTransition(post, () => {
-                            post.innerHTML = newContent;
-                        }, 300);
-                    }, 1000);
-                });
-            }
+            updatePost(post, postId);
         });
     });
 
@@ -170,4 +100,222 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }, 2000);
-});
+
+    // Pull-to-refresh functionality
+    let startY = 0;
+    let isRefreshing = false;
+    const refreshThreshold = 80;
+    const mainElement = document.querySelector('main');
+    const refreshIndicator = document.getElementById('refresh-indicator');
+
+    mainElement.addEventListener('touchstart', (e) => {
+        if (mainElement.scrollTop === 0 && !isRefreshing) {
+            startY = e.touches[0].clientY;
+        }
+    }, { passive: true });
+
+    mainElement.addEventListener('touchmove', (e) => {
+        if (startY === 0 || isRefreshing) return;
+
+        const currentY = e.touches[0].clientY;
+        const diff = currentY - startY;
+
+        if (diff > 0 && mainElement.scrollTop === 0) {
+            e.preventDefault();
+            const progress = Math.min(diff / refreshThreshold, 1);
+            refreshIndicator.style.transform = `translateX(-50%) translateY(${diff * 0.5}px)`;
+            if (progress >= 1) {
+                refreshIndicator.classList.add('visible');
+            }
+        }
+    }, { passive: false });
+
+    mainElement.addEventListener('touchend', () => {
+        if (startY === 0 || isRefreshing) return;
+
+        const currentY = refreshIndicator.getBoundingClientRect().top + 60;
+        const diff = currentY - startY;
+
+        if (diff >= refreshThreshold) {
+            isRefreshing = true;
+            refreshIndicator.classList.add('visible');
+            refreshIndicator.style.transform = 'translateX(-50%) translateY(40px)';
+
+            // Simulate refresh
+            setTimeout(() => {
+                refreshFeed();
+                setTimeout(() => {
+                    refreshIndicator.classList.remove('visible');
+                    refreshIndicator.style.transform = 'translateX(-50%) translateY(0)';
+                    isRefreshing = false;
+                }, 500);
+            }, 1500);
+        } else {
+            refreshIndicator.classList.remove('visible');
+            refreshIndicator.style.transform = 'translateX(-50%) translateY(0)';
+        }
+
+        startY = 0;
+    });
+
+    // Function to refresh feed content
+    function refreshFeed() {
+        const posts = document.querySelectorAll('.post');
+        posts.forEach((post, index) => {
+            const postId = index + 1;
+            let newContent = '';
+
+            if (postId == 1) {
+                newContent = `
+                    <div class="post-header">
+                        <img src="https://via.placeholder.com/40x40/FF6B6B/FFFFFF?text=A" alt="Alice" class="avatar">
+                        <div class="author-info">
+                            <span class="author">Alice</span>
+                            <span class="time">Just now</span>
+                        </div>
+                    </div>
+                    <p class="content">Refreshed! Just tried an amazing new brew! ☕✨</p>
+                    <img src="https://via.placeholder.com/300x200/4ECDC4/FFFFFF?text=New+Coffee" alt="New coffee experience" class="post-image">
+                    <div class="actions">
+                        <button class="update-post" data-post="1">Like +1</button>
+                        <span class="likes">15 likes</span>
+                    </div>
+                `;
+            } else if (postId == 2) {
+                newContent = `
+                    <div class="post-header">
+                        <img src="https://via.placeholder.com/40x40/45B7D1/FFFFFF?text=B" alt="Bob" class="avatar">
+                        <div class="author-info">
+                            <span class="author">Bob</span>
+                            <span class="time">Just now</span>
+                        </div>
+                    </div>
+                    <p class="content">Fresh sunset vibes! 🌅🔥</p>
+                    <img src="https://via.placeholder.com/300x200/FFA07A/FFFFFF?text=Fresh+Sunset" alt="Fresh sunset" class="post-image">
+                    <div class="actions">
+                        <button class="update-post" data-post="2">Comment</button>
+                        <span class="comments">6 comments</span>
+                    </div>
+                `;
+            } else if (postId == 3) {
+                newContent = `
+                    <div class="post-header">
+                        <img src="https://via.placeholder.com/40x40/98D8C8/FFFFFF?text=C" alt="Charlie" class="avatar">
+                        <div class="author-info">
+                            <span class="author">Charlie</span>
+                            <span class="time">Just now</span>
+                        </div>
+                    </div>
+                    <p class="content">Updated recipe: Even better pasta! 🍝👨‍🍳</p>
+                    <img src="https://via.placeholder.com/300x200/F7DC6F/FFFFFF?text=Updated+Pasta" alt="Updated pasta recipe" class="post-image">
+                    <div class="actions">
+                        <button class="update-post" data-post="3">Share</button>
+                        <span class="shares">8 shares</span>
+                    </div>
+                `;
+            }
+
+            if (isSupported) {
+                post.startViewTransition({
+                    callback: () => {
+                        post.innerHTML = newContent;
+                        // Re-attach event listeners
+                        post.querySelector('.update-post').addEventListener('click', function() {
+                            const btnPostId = this.dataset.post;
+                            const btnPost = posts[btnPostId - 1];
+                            updatePost(btnPost, btnPostId);
+                        });
+                    }
+                });
+            } else {
+                manualTransition(post, () => {
+                    post.innerHTML = newContent;
+                    post.querySelector('.update-post').addEventListener('click', function() {
+                        const btnPostId = this.dataset.post;
+                        const btnPost = posts[btnPostId - 1];
+                        updatePost(btnPost, btnPostId);
+                    });
+                });
+            }
+        });
+    }
+
+    // Helper function for updating individual posts
+    function updatePost(post, postId) {
+        let newContent = '';
+        if (postId == 1) {
+            newContent = `
+                <div class="post-header">
+                    <img src="https://via.placeholder.com/40x40/FF6B6B/FFFFFF?text=A" alt="Alice" class="avatar">
+                    <div class="author-info">
+                        <span class="author">Alice</span>
+                        <span class="time">Just now</span>
+                    </div>
+                </div>
+                <p class="content">Refreshed! Just tried an amazing new brew! ☕✨</p>
+                <img src="https://via.placeholder.com/300x200/4ECDC4/FFFFFF?text=New+Coffee" alt="New coffee experience" class="post-image">
+                <div class="actions">
+                    <button class="update-post" data-post="1">Like +1</button>
+                    <span class="likes">16 likes</span>
+                </div>
+            `;
+        } else if (postId == 2) {
+            newContent = `
+                <div class="post-header">
+                    <img src="https://via.placeholder.com/40x40/45B7D1/FFFFFF?text=B" alt="Bob" class="avatar">
+                    <div class="author-info">
+                        <span class="author">Bob</span>
+                        <span class="time">Just now</span>
+                    </div>
+                </div>
+                <p class="content">Fresh sunset vibes! 🌅🔥</p>
+                <img src="https://via.placeholder.com/300x200/FFA07A/FFFFFF?text=Fresh+Sunset" alt="Fresh sunset" class="post-image">
+                <div class="actions">
+                    <button class="update-post" data-post="2">Comment</button>
+                    <span class="comments">7 comments</span>
+                </div>
+            `;
+        } else if (postId == 3) {
+            newContent = `
+                <div class="post-header">
+                    <img src="https://via.placeholder.com/40x40/98D8C8/FFFFFF?text=C" alt="Charlie" class="avatar">
+                    <div class="author-info">
+                        <span class="author">Charlie</span>
+                        <span class="time">Just now</span>
+                    </div>
+                </div>
+                <p class="content">Updated recipe: Even better pasta! 🍝👨‍🍳</p>
+                <img src="https://via.placeholder.com/300x200/F7DC6F/FFFFFF?text=Updated+Pasta" alt="Updated pasta recipe" class="post-image">
+                <div class="actions">
+                    <button class="update-post" data-post="3">Share</button>
+                    <span class="shares">9 shares</span>
+                </div>
+            `;
+        }
+
+        if (isSupported) {
+            post.startViewTransition({
+                callback: () => {
+                    post.innerHTML = createSkeleton();
+                    setTimeout(() => {
+                        post.innerHTML = newContent;
+                        post.querySelector('.update-post').addEventListener('click', function() {
+                            updatePost(post, postId);
+                        });
+                    }, 1000);
+                }
+            });
+        } else {
+            manualTransition(post, () => {
+                post.innerHTML = createSkeleton();
+                setTimeout(() => {
+                    manualTransition(post, () => {
+                        post.innerHTML = newContent;
+                        post.querySelector('.update-post').addEventListener('click', function() {
+                            updatePost(post, postId);
+                        });
+                    }, 300);
+                }, 1000);
+            });
+        }
+    }
