@@ -68,8 +68,30 @@
     <nav id="bottom-nav" style="contain: layout;">
         <button class="nav-item active" data-tab="home">Home</button>
         <button class="nav-item" data-tab="search">Search</button>
+        <button class="nav-item" id="create-post-btn" data-tab="create">Create</button>
         <button class="nav-item" data-tab="profile">Profile</button>
     </nav>
+
+    <!-- Post Creation Modal -->
+    <div id="create-post-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Post</h2>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <form id="create-post-form">
+                <div class="form-group">
+                    <label for="post-content" class="form-label">What's on your mind?</label>
+                    <textarea id="post-content" class="form-textarea" placeholder="Share your thoughts..." required></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-post">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

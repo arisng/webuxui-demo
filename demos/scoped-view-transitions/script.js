@@ -55,35 +55,99 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Bottom navigation transitions
-    function attachNavListeners() {
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const tab = this.dataset.tab;
-                const newNav = `
-                    <button class="nav-item ${tab === 'home' ? 'active' : ''}" data-tab="home">Home</button>
-                    <button class="nav-item ${tab === 'search' ? 'active' : ''}" data-tab="search">Search</button>
-                    <button class="nav-item ${tab === 'profile' ? 'active' : ''}" data-tab="profile">Profile</button>
-                `;
+    // Post creation modal functionality
+    const createPostBtn = document.getElementById('create-post-btn');
+    const createPostModal = document.getElementById('create-post-modal');
+    const modalClose = document.getElementById('modal-close');
+    const cancelPost = document.getElementById('cancel-post');
+    const createPostForm = document.getElementById('create-post-form');
+    const postContentTextarea = document.getElementById('post-content');
 
-                if (isSupported) {
-                    bottomNav.startViewTransition({
-                        callback: () => {
-                            bottomNav.innerHTML = newNav;
-                            attachNavListeners();
-                        }
-                    });
-                } else {
-                    manualTransition(bottomNav, () => {
-                        bottomNav.innerHTML = newNav;
-                        attachNavListeners();
-                    });
-                }
+    // Open modal
+    createPostBtn.addEventListener('click', () => {
+        if (isSupported) {
+            createPostModal.startViewTransition(() => {
+                createPostModal.classList.add('visible');
+                postContentTextarea.focus();
             });
-        });
+        } else {
+            createPostModal.classList.add('visible');
+            postContentTextarea.focus();
+        }
+    });
+
+    // Close modal functions
+    function closeModal() {
+        if (isSupported) {
+            createPostModal.startViewTransition(() => {
+                createPostModal.classList.remove('visible');
+                createPostForm.reset();
+            });
+        } else {
+            createPostModal.classList.remove('visible');
+            createPostForm.reset();
+        }
     }
 
-    attachNavListeners();
+    modalClose.addEventListener('click', closeModal);
+    cancelPost.addEventListener('click', closeModal);
+
+    // Close modal on overlay click
+    createPostModal.addEventListener('click', (e) => {
+        if (e.target === createPostModal) {
+            closeModal();
+        }
+    });
+
+    // Handle form submission
+    createPostForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const content = postContentTextarea.value.trim();
+        if (content) {
+            createNewPost(content);
+            closeModal();
+        }
+    });
+
+    function createNewPost(content) {
+        postCount++;
+        const newPost = document.createElement('article');
+        newPost.className = 'post';
+        newPost.id = `post${postCount}`;
+        newPost.style.contain = 'layout';
+        newPost.style.viewTransitionName = `post${postCount}-transition`;
+
+        // Use current user (could be made dynamic)
+        const author = 'You';
+        const avatarColor = '007bff';
+
+        newPost.innerHTML = `
+            <div class="post-header">
+                <img src="https://via.placeholder.com/40x40/${avatarColor}/FFFFFF?text=Y" alt="${author}" class="avatar">
+                <div class="author-info">
+                    <span class="author">${author}</span>
+                    <span class="time">Just now</span>
+                </div>
+            </div>
+            <p class="content">${content}</p>
+            <div class="actions">
+                <button class="update-post" data-post="${postCount}">Like</button>
+                <span class="likes">0 likes</span>
+            </div>
+        `;
+
+        // Insert at the top of the feed
+        mainElement.insertBefore(newPost, mainElement.firstElementChild);
+
+        // Attach event listener
+        newPost.querySelector('.update-post').addEventListener('click', function() {
+            const postId = this.dataset.post;
+            updatePost(newPost, postId);
+        });
+
+        // Smooth scroll to top
+        mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
     // Auto-update header after 2 seconds
     setTimeout(() => {
