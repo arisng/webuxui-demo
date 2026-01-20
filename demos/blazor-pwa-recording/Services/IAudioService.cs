@@ -10,4 +10,5 @@ public interface IAudioService
     Task DeleteRecording(string id);
     Task PlayRecording(string id);
     Task StopPlayback();
+    event Action? PlaybackEnded;
 }

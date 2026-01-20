@@ -4,6 +4,7 @@
 
 @using blazor_pwa_recording.Models
 @inject blazor_pwa_recording.Services.IAudioService AudioService
+@implements IDisposable
 
 <div class="home-container">
     @if (errorMessage != null)
@@ -70,6 +71,7 @@
         try
         {
             recordings = await AudioService.GetRecordings();
+            AudioService.PlaybackEnded += HandlePlaybackEnded;
         }
         catch (Exception ex)
         {
@@ -141,5 +143,19 @@
             return $"Today, {dt.ToString("h:mm tt")}";
         else
             return dt.ToString("MMM d, h:mm tt");
+    }
+
+    private void HandlePlaybackEnded()
+    {
+        foreach (var rec in recordings)
+        {
+            rec.IsPlaying = false;
+        }
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        AudioService.PlaybackEnded -= HandlePlaybackEnded;
     }
 }

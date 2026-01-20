@@ -12,6 +12,14 @@ public class AudioService : IAudioService
         _jsRuntime = jsRuntime;
     }
 
+    public event Action? PlaybackEnded;
+
+    [JSInvokable]
+    public void OnPlaybackEnded()
+    {
+        PlaybackEnded?.Invoke();
+    }
+
     public async Task StartRecording()
     {
         await _jsRuntime.InvokeAsync<object>("AudioApp.startRecording");
@@ -34,7 +42,7 @@ public class AudioService : IAudioService
 
     public async Task PlayRecording(string id)
     {
-        await _jsRuntime.InvokeAsync<object>("AudioApp.playRecording", id);
+        await _jsRuntime.InvokeAsync<object>("AudioApp.playRecording", id, DotNetObjectReference.Create(this));
     }
 
     public async Task StopPlayback()
