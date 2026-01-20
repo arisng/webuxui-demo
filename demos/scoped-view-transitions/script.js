@@ -2,6 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const header = document.getElementById('header');
+    const headerTitle = document.getElementById('header-title');
     const posts = {
         1: document.getElementById('post1'),
         2: document.getElementById('post2'),
@@ -13,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let savedScrollPosition = 0;
     // Variable to track the currently expanded post
     let currentExpandedPost = null;
+
+    // Restore focus after closing overlays
+    let lastFocusBeforeOverlay = null;
 
     // Fallback function for manual transitions
     function manualTransition(element, callback, duration = 600) {
@@ -132,8 +136,16 @@ document.addEventListener('DOMContentLoaded', () => {
         notification.innerHTML = `
             <span class="notification-icon">${icons[type] || '💬'}</span>
             <span class="notification-message">${message}</span>
-            <span class="notification-close" onclick="dismissNotification(${id})">&times;</span>
+            <button type="button" class="notification-close" aria-label="Dismiss notification">&times;</button>
         `;
+
+        const closeButton = notification.querySelector('.notification-close');
+        if (closeButton) {
+            closeButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dismissNotification(id);
+            });
+        }
 
         // Add click handler for the notification itself
         notification.addEventListener('click', (e) => {
@@ -204,14 +216,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Open modal
     createPostBtn.addEventListener('click', () => {
+        lastFocusBeforeOverlay = document.activeElement;
         lockScroll();
         if (isSupported) {
             createPostModal.startViewTransition(() => {
                 createPostModal.classList.add('visible');
+                createPostModal.setAttribute('aria-hidden', 'false');
                 postContentTextarea.focus();
             });
         } else {
             createPostModal.classList.add('visible');
+            createPostModal.setAttribute('aria-hidden', 'false');
             postContentTextarea.focus();
         }
     });
@@ -222,11 +237,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isSupported) {
             createPostModal.startViewTransition(() => {
                 createPostModal.classList.remove('visible');
+                createPostModal.setAttribute('aria-hidden', 'true');
                 createPostForm.reset();
             });
         } else {
             createPostModal.classList.remove('visible');
+            createPostModal.setAttribute('aria-hidden', 'true');
             createPostForm.reset();
+        }
+
+        // Restore focus to where the user was
+        if (lastFocusBeforeOverlay instanceof HTMLElement) {
+            lastFocusBeforeOverlay.focus();
         }
     }
 
@@ -257,7 +279,9 @@ document.addEventListener('DOMContentLoaded', () => {
         newPost.id = `post${postCount}`;
         newPost.style.contain = 'layout';
         newPost.style.viewTransitionName = `post${postCount}-transition`;
-        newPost.setAttribute('onclick', `togglePostExpansion('post${postCount}')`);
+        newPost.setAttribute('tabindex', '0');
+        newPost.setAttribute('role', 'button');
+        newPost.setAttribute('aria-label', 'Open post');
 
         // Use current user (could be made dynamic)
         const author = 'You';
@@ -313,9 +337,30 @@ document.addEventListener('DOMContentLoaded', () => {
             togglePostExpansion(newPost.id);
         });
 
+        // Keyboard support for opening a post
+        newPost.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                togglePostExpansion(newPost.id);
+            }
+        });
+
         // Smooth scroll to top
         mainElement.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    // Make existing posts keyboard-accessible
+    Object.values(posts).forEach((postEl) => {
+        if (!postEl) return;
+        postEl.setAttribute('tabindex', postEl.getAttribute('tabindex') || '0');
+        postEl.setAttribute('role', postEl.getAttribute('role') || 'button');
+        postEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                togglePostExpansion(postEl.id);
+            }
+        });
+    });
 
     // Auto-update header after 2 seconds
     setTimeout(() => {
@@ -791,6 +836,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const shareSheetOverlay = document.getElementById('share-sheet-overlay');
         const shareSheet = document.getElementById('share-sheet');
 
+        lastFocusBeforeOverlay = document.activeElement;
+
         // Lock scroll when overlay is shown
         lockScroll();
 
@@ -800,10 +847,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             shareSheetOverlay.startViewTransition(() => {
                 shareSheetOverlay.classList.add('visible');
+                shareSheetOverlay.setAttribute('aria-hidden', 'false');
             });
         } else {
             // Fallback for browsers without scoped transitions
             shareSheetOverlay.classList.add('visible');
+            shareSheetOverlay.setAttribute('aria-hidden', 'false');
+        }
+
+        // Focus close button for keyboard users
+        const shareClose = document.getElementById('share-close');
+        if (shareClose) {
+            setTimeout(() => shareClose.focus(), 0);
         }
     }
 
@@ -817,6 +872,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const header = document.getElementById('header');
         const bottomNav = document.getElementById('bottom-nav');
 
+        lastFocusBeforeOverlay = document.activeElement;
+
         // Save current scroll position
         savedScrollPosition = mainElement.scrollTop;
 
@@ -828,23 +885,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isSupported) {
             // Use view transitions for page navigation
-            document.startViewTransition(() => {
+            const transition = document.startViewTransition(() => {
                 // Hide feed, show details
                 mainElement.style.display = 'none';
+                mainElement.setAttribute('aria-hidden', 'true');
                 header.style.display = 'none';
+                header.setAttribute('aria-hidden', 'true');
                 bottomNav.style.display = 'none';
+                bottomNav.setAttribute('aria-hidden', 'true');
                 detailsView.style.display = 'block';
+                detailsView.setAttribute('aria-hidden', 'false');
 
                 // Set view transition names for smooth transition
                 post.style.viewTransitionName = 'details-post-transition';
                 detailsPost.style.viewTransitionName = 'details-post-transition';
             });
+
+            transition.finished.then(() => {
+                const backBtn = document.querySelector('#details-header .back-btn');
+                if (backBtn instanceof HTMLElement) backBtn.focus();
+            });
         } else {
             // Fallback
             mainElement.style.display = 'none';
+            mainElement.setAttribute('aria-hidden', 'true');
             header.style.display = 'none';
+            header.setAttribute('aria-hidden', 'true');
             bottomNav.style.display = 'none';
+            bottomNav.setAttribute('aria-hidden', 'true');
             detailsView.style.display = 'block';
+            detailsView.setAttribute('aria-hidden', 'false');
+
+            const backBtn = document.querySelector('#details-header .back-btn');
+            if (backBtn instanceof HTMLElement) backBtn.focus();
         }
     }
 
@@ -937,8 +1010,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Hide details, show feed
                 detailsView.style.display = 'none';
                 detailsView.style.backgroundColor = ''; // Reset background
+                detailsView.setAttribute('aria-hidden', 'true');
                 mainElement.style.display = 'block';
+                mainElement.setAttribute('aria-hidden', 'false');
                 header.style.display = 'block';
+                header.setAttribute('aria-hidden', 'false');
 
                 // Restore scroll position
                 mainElement.scrollTop = savedScrollPosition;
@@ -954,14 +1030,24 @@ document.addEventListener('DOMContentLoaded', () => {
             // Show nav after transition completes to avoid layering issues
             transition.finished.then(() => {
                 bottomNav.style.display = '';
+                bottomNav.setAttribute('aria-hidden', 'false');
+
+                // Restore focus to the previously active element
+                if (lastFocusBeforeOverlay instanceof HTMLElement) {
+                    lastFocusBeforeOverlay.focus();
+                }
             });
         } else {
             // Fallback
             detailsView.style.display = 'none';
             detailsView.style.backgroundColor = ''; // Reset background
+            detailsView.setAttribute('aria-hidden', 'true');
             mainElement.style.display = 'block';
+            mainElement.setAttribute('aria-hidden', 'false');
             header.style.display = 'block';
+            header.setAttribute('aria-hidden', 'false');
             bottomNav.style.display = 'flex';
+            bottomNav.setAttribute('aria-hidden', 'false');
             mainElement.scrollTop = savedScrollPosition;
 
             // Reset view transition names
@@ -970,6 +1056,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             detailsPost.style.viewTransitionName = '';
             currentExpandedPost = null;
+
+            if (lastFocusBeforeOverlay instanceof HTMLElement) {
+                lastFocusBeforeOverlay.focus();
+            }
         }
     }
 
@@ -1037,13 +1127,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isSupported) {
             shareSheetOverlay.startViewTransition(() => {
                 shareSheetOverlay.classList.remove('visible');
+                shareSheetOverlay.setAttribute('aria-hidden', 'true');
             });
         } else {
             shareSheetOverlay.classList.remove('visible');
+            shareSheetOverlay.setAttribute('aria-hidden', 'true');
         }
 
         // Unlock scroll when overlay is hidden
         unlockScroll();
+
+        if (lastFocusBeforeOverlay instanceof HTMLElement) {
+            lastFocusBeforeOverlay.focus();
+        }
     }
 
     // Handle individual share options
@@ -1217,24 +1313,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.classList.add('active');
                 
                 // Update header based on selected tab
-                let newHeader = '';
+                let newTitle = '';
                 switch(tab) {
                     case 'home':
-                        newHeader = '<h1>Social Feed</h1>';
+                        newTitle = 'Social Feed';
                         break;
                     case 'search':
-                        newHeader = '<h1>Search</h1>';
+                        newTitle = 'Search';
                         break;
                     case 'profile':
-                        newHeader = '<h1>Profile</h1>';
+                        newTitle = 'Profile';
                         break;
                     default:
-                        newHeader = '<h1>Social Feed</h1>';
+                        newTitle = 'Social Feed';
                 }
                 
                 // Always use manual transition for now since scoped view transitions have issues
-                manualTransition(header, () => {
-                    header.innerHTML = newHeader;
+                const titleTarget = headerTitle || header.querySelector('h1') || header;
+                manualTransition(titleTarget, () => {
+                    if (titleTarget === header) {
+                        header.textContent = newTitle;
+                    } else {
+                        titleTarget.textContent = newTitle;
+                    }
                 });
             });
         });

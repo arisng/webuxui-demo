@@ -11,24 +11,24 @@
     <div id="notification-container" class="notification-container"></div>
 
     <header id="header" style="contain: layout;">
-        <h1>Social Feed</h1>
-        <button class="demo-notifications-btn" onclick="showRandomNotification()" title="Demo Notifications">🔔</button>
+        <h1 id="header-title">Social Feed</h1>
+        <button type="button" class="demo-notifications-btn" onclick="showRandomNotification()" title="Demo Notifications" aria-label="Show a demo notification">🔔</button>
     </header>
     <main>
         <div id="refresh-indicator" class="refresh-indicator">
             <div class="refresh-spinner"></div>
             Refreshing...
         </div>
-        <article id="post1" class="post" style="contain: layout;">
+        <article id="post1" class="post" style="contain: layout;" tabindex="0" role="button" aria-label="Open post by Alice">
             <div class="post-header">
-                <img src="https://picsum.photos/seed/alice/40/40" alt="Alice" class="avatar">
+                <img src="https://picsum.photos/seed/alice/40/40" alt="Alice" class="avatar" loading="lazy" decoding="async">
                 <div class="author-info">
                     <span class="author">Alice</span>
                     <span class="time">2h ago</span>
                 </div>
             </div>
             <p class="content">Just tried the new coffee shop downtown! ☕ The latte art is amazing. The atmosphere is so cozy and the baristas are incredibly skilled. I ordered their signature caramel macchiato and it was perfect - not too sweet, just the right amount of espresso. Definitely recommend checking it out if you're in the area!</p>
-            <img src="https://picsum.photos/seed/coffee/300/200" alt="Coffee shop latte art" class="post-image" style="view-transition-name: image-1;">
+            <img src="https://picsum.photos/seed/coffee/300/200" alt="Coffee shop latte art" class="post-image" style="view-transition-name: image-1;" loading="lazy" decoding="async">
             <div class="actions">
                 <button class="action-btn like-btn" data-post="1" data-action="like" data-liked="false">
                     <span class="heart-icon">🤍</span>
@@ -41,24 +41,24 @@
             </div>
             <div class="comments-section" id="comments-1" style="display: none;">
                 <div class="comment-input">
-                    <img src="https://picsum.photos/seed/user/32/32" alt="You" class="comment-avatar">
-                    <input type="text" class="comment-field" placeholder="Write a comment..." data-post="1">
+                    <img src="https://picsum.photos/seed/user/32/32" alt="You" class="comment-avatar" loading="lazy" decoding="async">
+                    <input type="text" class="comment-field" placeholder="Write a comment..." aria-label="Write a comment" data-post="1">
                 </div>
                 <div class="comments-list">
                     <!-- Sample comments will be populated by JavaScript -->
                 </div>
             </div>
         </article>
-        <article id="post2" class="post" style="contain: layout;">
+        <article id="post2" class="post" style="contain: layout;" tabindex="0" role="button" aria-label="Open post by Bob">
             <div class="post-header">
-                <img src="https://picsum.photos/seed/bob/40/40" alt="Bob" class="avatar">
+                <img src="https://picsum.photos/seed/bob/40/40" alt="Bob" class="avatar" loading="lazy" decoding="async">
                 <div class="author-info">
                     <span class="author">Bob</span>
                     <span class="time">4h ago</span>
                 </div>
             </div>
             <p class="content">Beautiful sunset today! 🌅 The sky was painted with the most incredible colors - deep oranges, vibrant pinks, and hints of purple. I stood there for what felt like hours just watching the sun dip below the horizon. Nature's artwork never ceases to amaze me. Perfect end to a great day!</p>
-            <img src="https://picsum.photos/seed/sunset/300/200" alt="Beautiful sunset" class="post-image" style="view-transition-name: image-2;">
+            <img src="https://picsum.photos/seed/sunset/300/200" alt="Beautiful sunset" class="post-image" style="view-transition-name: image-2;" loading="lazy" decoding="async">
             <div class="actions">
                 <button class="action-btn like-btn" data-post="2" data-action="like" data-liked="false">
                     <span class="heart-icon">🤍</span>
@@ -71,12 +71,12 @@
             </div>
             <div class="comments-section" id="comments-2" style="display: none;">
                 <div class="comment-input">
-                    <img src="https://picsum.photos/seed/user/32/32" alt="You" class="comment-avatar">
-                    <input type="text" class="comment-field" placeholder="Write a comment..." data-post="2">
+                    <img src="https://picsum.photos/seed/user/32/32" alt="You" class="comment-avatar" loading="lazy" decoding="async">
+                    <input type="text" class="comment-field" placeholder="Write a comment..." aria-label="Write a comment" data-post="2">
                 </div>
                 <div class="comments-list">
                     <div class="comment">
-                        <img src="https://picsum.photos/seed/commenter1/32/32" alt="Sarah" class="comment-avatar">
+                        <img src="https://picsum.photos/seed/commenter1/32/32" alt="Sarah" class="comment-avatar" loading="lazy" decoding="async">
                         <div class="comment-content">
                             <span class="comment-author">Sarah</span>
                             <span class="comment-time">2h ago</span>
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                     <div class="comment">
-                        <img src="https://picsum.photos/seed/commenter2/32/32" alt="Mike" class="comment-avatar">
+                        <img src="https://picsum.photos/seed/commenter2/32/32" alt="Mike" class="comment-avatar" loading="lazy" decoding="async">
                         <div class="comment-content">
                             <span class="comment-author">Mike</span>
                             <span class="comment-time">1h ago</span>
@@ -92,7 +92,7 @@
                         </div>
                     </div>
                     <div class="comment">
-                        <img src="https://picsum.photos/seed/commenter3/32/32" alt="Emma" class="comment-avatar">
+                        <img src="https://picsum.photos/seed/commenter3/32/32" alt="Emma" class="comment-avatar" loading="lazy" decoding="async">
                         <div class="comment-content">
                             <span class="comment-author">Emma</span>
                             <span class="comment-time">30m ago</span>
@@ -102,16 +102,16 @@
                 </div>
             </div>
         </article>
-        <article id="post3" class="post" style="contain: layout;">
+        <article id="post3" class="post" style="contain: layout;" tabindex="0" role="button" aria-label="Open post by Charlie">
             <div class="post-header">
-                <img src="https://picsum.photos/seed/charlie/40/40" alt="Charlie" class="avatar">
+                <img src="https://picsum.photos/seed/charlie/40/40" alt="Charlie" class="avatar" loading="lazy" decoding="async">
                 <div class="author-info">
                     <span class="author">Charlie</span>
                     <span class="time">6h ago</span>
                 </div>
             </div>
             <p class="content">New recipe alert! Made the best pasta ever. 🍝 I combined fresh tomatoes, basil, garlic, and a touch of cream for the sauce. Used linguine and topped it with parmesan and red pepper flakes. The key is using really good olive oil and not overcooking the pasta. It turned out perfectly al dente with amazing flavor in every bite!</p>
-            <img src="https://picsum.photos/seed/pasta/300/200" alt="Delicious pasta" class="post-image" style="view-transition-name: image-3;">
+            <img src="https://picsum.photos/seed/pasta/300/200" alt="Delicious pasta" class="post-image" style="view-transition-name: image-3;" loading="lazy" decoding="async">
             <div class="actions">
                 <button class="action-btn like-btn" data-post="3" data-action="like" data-liked="false">
                     <span class="heart-icon">🤍</span>
@@ -124,12 +124,12 @@
             </div>
             <div class="comments-section" id="comments-3" style="display: none;">
                 <div class="comment-input">
-                    <img src="https://picsum.photos/seed/user/32/32" alt="You" class="comment-avatar">
-                    <input type="text" class="comment-field" placeholder="Write a comment..." data-post="3">
+                    <img src="https://picsum.photos/seed/user/32/32" alt="You" class="comment-avatar" loading="lazy" decoding="async">
+                    <input type="text" class="comment-field" placeholder="Write a comment..." aria-label="Write a comment" data-post="3">
                 </div>
                 <div class="comments-list">
                     <div class="comment">
-                        <img src="https://picsum.photos/seed/commenter4/32/32" alt="Alex" class="comment-avatar">
+                        <img src="https://picsum.photos/seed/commenter4/32/32" alt="Alex" class="comment-avatar" loading="lazy" decoding="async">
                         <div class="comment-content">
                             <span class="comment-author">Alex</span>
                             <span class="comment-time">3h ago</span>
@@ -137,7 +137,7 @@
                         </div>
                     </div>
                     <div class="comment">
-                        <img src="https://picsum.photos/seed/commenter5/32/32" alt="Lisa" class="comment-avatar">
+                        <img src="https://picsum.photos/seed/commenter5/32/32" alt="Lisa" class="comment-avatar" loading="lazy" decoding="async">
                         <div class="comment-content">
                             <span class="comment-author">Lisa</span>
                             <span class="comment-time">1h ago</span>
@@ -156,7 +156,7 @@
     <!-- Details View -->
     <div id="details-view" class="details-view" style="display: none;">
         <header id="details-header" class="details-header" style="contain: layout;">
-            <button class="back-btn" onclick="goBackToFeed()">← Back</button>
+            <button type="button" class="back-btn" onclick="goBackToFeed()" aria-label="Back to feed">← Back</button>
             <h1>Post Details</h1>
         </header>
         <div class="details-content">
@@ -173,30 +173,30 @@
     </div>
 
     <nav id="bottom-nav" style="contain: layout;">
-        <button class="nav-item active" data-tab="home">
+        <button type="button" class="nav-item active" data-tab="home">
             <span class="nav-icon">🏠</span>
             <span class="nav-label">Home</span>
         </button>
-        <button class="nav-item" data-tab="search">
+        <button type="button" class="nav-item" data-tab="search">
             <span class="nav-icon">🔍</span>
             <span class="nav-label">Search</span>
         </button>
-        <button class="nav-item" id="create-post-btn" data-tab="create">
+        <button type="button" class="nav-item" id="create-post-btn" data-tab="create" aria-label="Create a new post">
             <span class="nav-icon">➕</span>
             <span class="nav-label">Create</span>
         </button>
-        <button class="nav-item" data-tab="profile">
+        <button type="button" class="nav-item" data-tab="profile">
             <span class="nav-icon">👤</span>
             <span class="nav-label">Profile</span>
         </button>
     </nav>
 
     <!-- Post Creation Modal -->
-    <div id="create-post-modal" class="modal-overlay">
-        <div class="modal">
+    <div id="create-post-modal" class="modal-overlay" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="create-post-title">
             <div class="modal-header">
-                <h2 class="modal-title">Create New Post</h2>
-                <button class="modal-close" id="modal-close">&times;</button>
+                <h2 class="modal-title" id="create-post-title">Create New Post</h2>
+                <button type="button" class="modal-close" id="modal-close" aria-label="Close">&times;</button>
             </div>
             <form id="create-post-form">
                 <div class="form-group">
@@ -212,11 +212,11 @@
     </div>
 
     <!-- Share Sheet Overlay -->
-    <div id="share-sheet-overlay" class="share-sheet-overlay">
-        <div class="share-sheet" id="share-sheet">
+    <div id="share-sheet-overlay" class="share-sheet-overlay" aria-hidden="true">
+        <div class="share-sheet" id="share-sheet" role="dialog" aria-modal="true" aria-labelledby="share-sheet-title">
             <div class="share-header">
-                <h3>Share Post</h3>
-                <button class="share-close" id="share-close">&times;</button>
+                <h3 id="share-sheet-title">Share Post</h3>
+                <button type="button" class="share-close" id="share-close" aria-label="Close">&times;</button>
             </div>
             <div class="share-options">
                 <button class="share-option" data-share="twitter" style="view-transition-name: share-twitter-transition;">

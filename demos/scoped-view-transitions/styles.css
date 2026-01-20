@@ -21,14 +21,14 @@ body {
 /* Notification System */
 .notification-container {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: calc(20px + env(safe-area-inset-top));
+    right: calc(20px + env(safe-area-inset-right));
     z-index: 1000;
     pointer-events: none;
 }
 
 .notification-badge {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
     color: white;
     padding: 0.75rem 1rem;
     border-radius: 50px;
@@ -78,6 +78,11 @@ body {
     padding: 0.125rem;
     border-radius: 50%;
     transition: opacity 0.2s ease;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-size: 1.125rem;
+    line-height: 1;
 }
 
 .notification-close:hover {
@@ -155,6 +160,7 @@ header {
     contain: layout;
     view-transition-name: header-transition;
     will-change: transform, opacity;
+    position: relative;
 }
 
 header h1 {
@@ -184,6 +190,11 @@ header h1 {
     color: #495057;
 }
 
+.demo-notifications-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
 .demo-notifications-btn:active {
     transform: translateY(-50%) scale(0.95);
 }
@@ -203,6 +214,21 @@ main {
     contain: layout;
     will-change: transform, opacity;
     cursor: pointer; /* Indicate clickable for expansion */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+}
+
+.post:active {
+    transform: translateY(0);
+}
+
+.post:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.18), 0 6px 16px rgba(0,0,0,0.10);
 }
 
 .post:nth-child(1) { view-transition-name: post1-transition; }
@@ -212,14 +238,6 @@ main {
 .post.expanded .post-image {
     height: 400px; /* Larger image in expanded state */
     object-fit: cover;
-}
-
-.post.expanded .content {
-    /* Full content shown */
-}
-
-.post.expanded {
-    /* Any additional styles for expanded post */
 }
 
 .post-header {
@@ -321,6 +339,11 @@ main {
     color: #495057;
 }
 
+.action-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.18);
+}
+
 .action-btn:active {
     transform: scale(0.95);
 }
@@ -407,6 +430,10 @@ main {
 
 .comment-field:focus {
     border-color: #007bff;
+}
+
+.comment-field:focus-visible {
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
 }
 
 .comments-list {
@@ -506,6 +533,11 @@ nav {
     background-color: #007bff;
     color: white;
     box-shadow: 0 2px 8px rgba(0,123,255,0.3);
+}
+
+.nav-item:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.22);
 }
 
 /* Scoped View Transition Animations */
@@ -1062,6 +1094,11 @@ nav {
     color: #495057;
 }
 
+.modal-close:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.18);
+}
+
 .form-group {
     margin-bottom: 1.25rem;
 }
@@ -1206,6 +1243,11 @@ nav {
     color: #495057;
 }
 
+.share-close:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.18);
+}
+
 .share-options {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1232,6 +1274,11 @@ nav {
     background: #e9ecef;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.share-option:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.18);
 }
 
 .share-icon {
@@ -1466,6 +1513,26 @@ nav {
     background-color: #f8f9fa;
 }
 
+.back-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .notification-badge {
+        animation: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+}
+
 .details-header h1 {
     margin: 0;
     font-size: 1.2rem;
@@ -1568,6 +1635,7 @@ nav {
     color: #6c757d;
     line-height: 1.4;
     display: -webkit-box;
+    line-clamp: 2;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
