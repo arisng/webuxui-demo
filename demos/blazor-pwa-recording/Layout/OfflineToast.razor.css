@@ -1,0 +1,52 @@
+.toast-pill {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.5s ease-out;
+    z-index: 1000;
+}
+
+.toast-pill .icon {
+    margin-right: 8px;
+    color: #00ffff; /* neon accent */
+}
+
+.toast-pill .text {
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.toast-pill button {
+    background: none;
+    border: 1px solid #00ffff;
+    color: #00ffff;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.toast-pill button:hover {
+    background: rgba(0, 255, 255, 0.1);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translate(-50%, 100%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}

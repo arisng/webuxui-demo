@@ -1,0 +1,19 @@
+@if (IsVisible)
+{
+    <div class="toast-pill">
+        <span class="icon">⚡</span>
+        <span class="text">Ready for offline</span>
+        <button @onclick="Reload">Update</button>
+    </div>
+}
+
+@code {
+    public bool IsVisible { get; set; } = true;
+
+    private void Reload()
+    {
+        // Mock reload: console log for demo
+        Console.WriteLine("Reloading app...");
+        IsVisible = false;
+    }
+}

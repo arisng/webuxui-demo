@@ -2,6 +2,87 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="home-container">
+    <div class="visualizer-section">
+        <div class="visualizer">
+            @for (int i = 0; i < 15; i++)
+            {
+                <div class="bar @(isRecording ? "animating" : "")" style="--i: @i;"></div>
+            }
+        </div>
+    </div>
+    <div class="controls-section">
+        <button class="record-button @(isRecording ? "recording" : "")" @onclick="ToggleRecording">
+            <span class="inner-circle">@(isRecording ? "STOP" : "REC")</span>
+        </button>
+    </div>
+    <div class="list-section">
+        <h2>Recent Recordings</h2>
+        @foreach (var rec in recordings)
+        {
+            <div class="recording-card">
+                <button @onclick="() => PlayRecording(rec)" class="play-btn" aria-label="Play recording from @GetFormattedDate(rec.DateTime)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <path d="M10 8l6 4-6 4V8z" fill="currentColor"/>
+                    </svg>
+                </button>
+                <div class="info">
+                    <div class="date">@GetFormattedDate(rec.DateTime)</div>
+                    <div class="duration">@rec.Duration.ToString(@"mm\:ss")</div>
+                </div>
+                <button @onclick="() => DeleteRecording(rec)" class="delete-btn" aria-label="Delete recording">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        }
+    </div>
+</div>
 
-Welcome to your new app.
+@code {
+    private bool isRecording = false;
+    private List<RecordingModel> recordings = new();
+
+    private void ToggleRecording()
+    {
+        isRecording = !isRecording;
+        if (!isRecording)
+        {
+            // Add mock recording
+            recordings.Add(new RecordingModel
+            {
+                DateTime = DateTime.Now,
+                Duration = TimeSpan.FromSeconds(30), // Mock duration
+                Id = Guid.NewGuid().ToString()
+            });
+        }
+    }
+
+    private void PlayRecording(RecordingModel rec)
+    {
+        // Mock play - perhaps alert or something
+        // For now, do nothing or add logic later
+    }
+
+    private void DeleteRecording(RecordingModel rec)
+    {
+        recordings.Remove(rec);
+    }
+
+    private string GetFormattedDate(DateTime dt)
+    {
+        if (dt.Date == DateTime.Today)
+            return $"Today, {dt.ToString("h:mm tt")}";
+        else
+            return dt.ToString("MMM d, h:mm tt");
+    }
+
+    public class RecordingModel
+    {
+        public DateTime DateTime { get; set; }
+        public TimeSpan Duration { get; set; }
+        public string? Id { get; set; }
+    }
+}
