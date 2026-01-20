@@ -2,7 +2,16 @@
 
 <PageTitle>Home</PageTitle>
 
+@using blazor_pwa_recording.Models
+@inject blazor_pwa_recording.Services.IAudioService AudioService
+
 <div class="home-container">
+    @if (errorMessage != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+    }
     <div class="visualizer-section">
         <div class="visualizer">
             @for (int i = 0; i < 15; i++)
@@ -39,19 +48,13 @@
                 </button>
                 <div class="info">
                     <div class="date">@GetFormattedDate(rec.DateTime)</div>
-                    <div class="duration">@rec.Duration.ToString(@"mm\:ss")</div>
+                    <div class="duration">@TimeSpan.FromMilliseconds(rec.DurationMs).ToString(@"mm\:ss")</div>
                 </div>
                 <button @onclick="() => DeleteRecording(rec)" class="delete-btn" aria-label="Delete recording">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
-                @if (rec.IsPlaying)
-                {
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: @rec.Progress%"></div>
-                    </div>
-                }
             </div>
         }
     </div>
@@ -60,19 +63,42 @@
 @code {
     private bool isRecording = false;
     private List<RecordingModel> recordings = new();
+    private string? errorMessage;
 
-    private void ToggleRecording()
+    protected override async Task OnInitializedAsync()
     {
-        isRecording = !isRecording;
+        try
+        {
+            recordings = await AudioService.GetRecordings();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Failed to load recordings: " + ex.Message;
+        }
+    }
+
+    private async Task ToggleRecording()
+    {
+        errorMessage = null;
         if (!isRecording)
         {
-            // Add mock recording
-            recordings.Add(new RecordingModel
+            try
             {
-                DateTime = DateTime.Now,
-                Duration = TimeSpan.FromSeconds(30), // Mock duration
-                Id = Guid.NewGuid().ToString()
-            });
+                await AudioService.StartRecording();
+                isRecording = true;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "Unable to access microphone: " + ex.Message;
+                isRecording = false;
+            }
+        }
+        else
+        {
+            await AudioService.StopRecording();
+            isRecording = false;
+            // Reload recordings
+            recordings = await AudioService.GetRecordings();
         }
     }
 
@@ -82,7 +108,7 @@
         foreach (var r in recordings.Where(r => r.IsPlaying && r != rec))
         {
             r.IsPlaying = false;
-            r.Progress = 0;
+            await AudioService.StopPlayback();
         }
 
         // Toggle IsPlaying for the selected one
@@ -90,38 +116,23 @@
 
         if (rec.IsPlaying)
         {
-            // Start simulation
-            await SimulatePlayback(rec);
+            await AudioService.PlayRecording(rec.Id);
         }
         else
         {
-            // Pause: just set to false, progress remains
-            rec.Progress = 0; // Reset on pause? Or keep? Task says toggle, but for simplicity, reset on pause.
+            await AudioService.StopPlayback();
         }
 
         StateHasChanged();
     }
 
-    private async Task SimulatePlayback(RecordingModel rec)
+    private async Task DeleteRecording(RecordingModel rec)
     {
-        rec.Progress = 0;
-        while (rec.IsPlaying && rec.Progress < 100)
+        if (rec.Id != null)
         {
-            await Task.Delay(100); // Simulate 100ms per 1% progress, total 10 seconds
-            rec.Progress += 1;
-            StateHasChanged();
+            await AudioService.DeleteRecording(rec.Id);
+            recordings.Remove(rec);
         }
-        if (rec.Progress >= 100)
-        {
-            rec.IsPlaying = false;
-            rec.Progress = 0; // Reset after completion
-        }
-        StateHasChanged();
-    }
-
-    private void DeleteRecording(RecordingModel rec)
-    {
-        recordings.Remove(rec);
     }
 
     private string GetFormattedDate(DateTime dt)
@@ -130,14 +141,5 @@
             return $"Today, {dt.ToString("h:mm tt")}";
         else
             return dt.ToString("MMM d, h:mm tt");
-    }
-
-    public class RecordingModel
-    {
-        public DateTime DateTime { get; set; }
-        public TimeSpan Duration { get; set; }
-        public string? Id { get; set; }
-        public bool IsPlaying { get; set; } = false;
-        public double Progress { get; set; } = 0;
     }
 }

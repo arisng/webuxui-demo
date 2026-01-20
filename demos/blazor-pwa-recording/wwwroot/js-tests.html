@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Audio Engine Tests</title>
+</head>
+<body>
+    <h1>Audio Engine JS Tests</h1>
+    <button id="startBtn">Start Recording</button>
+    <button id="stopBtn" disabled>Stop Recording</button>
+    <button id="saveBtn" disabled>Save Recording</button>
+    <button id="loadBtn">Load Recordings</button>
+    <button id="deleteBtn" disabled>Delete Last Recording</button>
+    <div id="output"></div>
+
+    <script src="js/audio-engine.js"></script>
+    <script>
+        let recorder;
+        let currentBlob;
+        let recordings = [];
+
+        const output = document.getElementById('output');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const loadBtn = document.getElementById('loadBtn');
+        const deleteBtn = document.getElementById('deleteBtn');
+
+        function log(message) {
+            output.innerHTML += '<p>' + message + '</p>';
+        }
+
+        startBtn.addEventListener('click', async () => {
+            try {
+                recorder = new AudioRecorder();
+                await recorder.start();
+                log('Recording started');
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+            } catch (e) {
+                log('Error starting recording: ' + e.message);
+            }
+        });
+
+        stopBtn.addEventListener('click', async () => {
+            try {
+                currentBlob = await recorder.stop();
+                log('Recording stopped. Blob size: ' + currentBlob.size + ' bytes');
+                stopBtn.disabled = true;
+                saveBtn.disabled = false;
+            } catch (e) {
+                log('Error stopping recording: ' + e.message);
+            }
+        });
+
+        saveBtn.addEventListener('click', async () => {
+            try {
+                const id = await window.AudioApp.saveRecording(currentBlob, 10); // Assume 10s duration for test
+                log('Recording saved with ID: ' + id);
+                saveBtn.disabled = true;
+                deleteBtn.disabled = false;
+            } catch (e) {
+                log('Error saving recording: ' + e.message);
+            }
+        });
+
+        loadBtn.addEventListener('click', async () => {
+            try {
+                recordings = await window.AudioApp.getRecordings();
+                log('Loaded recordings: ' + JSON.stringify(recordings.map(r => ({ id: r.id, duration: r.duration }))));
+                if (recordings.length > 0) {
+                    deleteBtn.disabled = false;
+                }
+            } catch (e) {
+                log('Error loading recordings: ' + e.message);
+            }
+        });
+
+        deleteBtn.addEventListener('click', async () => {
+            if (recordings.length === 0) return;
+            const lastId = recordings[recordings.length - 1].id;
+            try {
+                await window.AudioApp.deleteRecording(lastId);
+                log('Deleted recording with ID: ' + lastId);
+                recordings = recordings.filter(r => r.id !== lastId);
+                if (recordings.length === 0) {
+                    deleteBtn.disabled = true;
+                }
+            } catch (e) {
+                log('Error deleting recording: ' + e.message);
+            }
+        });
+    </script>
+</body>
+</html>
