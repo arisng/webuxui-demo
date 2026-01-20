@@ -7,7 +7,7 @@
         <div class="visualizer">
             @for (int i = 0; i < 15; i++)
             {
-                <div class="bar @(isRecording ? "animating" : "")" style="--i: @i;"></div>
+                <div class="bar @((isRecording || recordings.Any(r => r.IsPlaying)) ? "animating" : "")" style="--i: @i;"></div>
             }
         </div>
     </div>
@@ -20,12 +20,22 @@
         <h2>Recent Recordings</h2>
         @foreach (var rec in recordings)
         {
-            <div class="recording-card">
-                <button @onclick="() => PlayRecording(rec)" class="play-btn" aria-label="Play recording from @GetFormattedDate(rec.DateTime)">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                        <path d="M10 8l6 4-6 4V8z" fill="currentColor"/>
-                    </svg>
+            <div class="recording-card @(rec.IsPlaying ? "playing" : "")">
+                <button @onclick="() => PlayRecording(rec)" class="play-btn" aria-label="@(rec.IsPlaying ? "Pause" : "Play") recording from @GetFormattedDate(rec.DateTime)">
+                    @if (rec.IsPlaying)
+                    {
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="6" y="4" width="4" height="16" fill="currentColor"/>
+                            <rect x="14" y="4" width="4" height="16" fill="currentColor"/>
+                        </svg>
+                    }
+                    else
+                    {
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M10 8l6 4-6 4V8z" fill="currentColor"/>
+                        </svg>
+                    }
                 </button>
                 <div class="info">
                     <div class="date">@GetFormattedDate(rec.DateTime)</div>
@@ -36,6 +46,12 @@
                         <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
+                @if (rec.IsPlaying)
+                {
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: @rec.Progress%"></div>
+                    </div>
+                }
             </div>
         }
     </div>
@@ -60,10 +76,47 @@
         }
     }
 
-    private void PlayRecording(RecordingModel rec)
+    private async void PlayRecording(RecordingModel rec)
     {
-        // Mock play - perhaps alert or something
-        // For now, do nothing or add logic later
+        // Stop any other playing recording
+        foreach (var r in recordings.Where(r => r.IsPlaying && r != rec))
+        {
+            r.IsPlaying = false;
+            r.Progress = 0;
+        }
+
+        // Toggle IsPlaying for the selected one
+        rec.IsPlaying = !rec.IsPlaying;
+
+        if (rec.IsPlaying)
+        {
+            // Start simulation
+            await SimulatePlayback(rec);
+        }
+        else
+        {
+            // Pause: just set to false, progress remains
+            rec.Progress = 0; // Reset on pause? Or keep? Task says toggle, but for simplicity, reset on pause.
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task SimulatePlayback(RecordingModel rec)
+    {
+        rec.Progress = 0;
+        while (rec.IsPlaying && rec.Progress < 100)
+        {
+            await Task.Delay(100); // Simulate 100ms per 1% progress, total 10 seconds
+            rec.Progress += 1;
+            StateHasChanged();
+        }
+        if (rec.Progress >= 100)
+        {
+            rec.IsPlaying = false;
+            rec.Progress = 0; // Reset after completion
+        }
+        StateHasChanged();
     }
 
     private void DeleteRecording(RecordingModel rec)
@@ -84,5 +137,7 @@
         public DateTime DateTime { get; set; }
         public TimeSpan Duration { get; set; }
         public string? Id { get; set; }
+        public bool IsPlaying { get; set; } = false;
+        public double Progress { get; set; } = 0;
     }
 }

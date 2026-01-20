@@ -146,7 +146,8 @@
     display: flex;
     align-items: center;
     padding: 16px;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, border-color 0.3s ease;
+    position: relative;
 }
 
 .recording-card:hover {
@@ -155,6 +156,12 @@
 
 .recording-card:active {
     transform: scale(0.98);
+}
+
+.recording-card.playing {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
 }
 
 .recording-card .play-btn,
@@ -185,4 +192,21 @@
 .recording-card .duration {
     color: #94a3b8;
     font-size: 12px;
+}
+
+.progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0 0 16px 16px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6 0%, #1e40af 100%);
+    transition: width 0.1s ease;
 }
