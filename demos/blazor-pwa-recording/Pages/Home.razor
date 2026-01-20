@@ -49,13 +49,16 @@
                 </button>
                 <div class="info">
                     <div class="date">@GetFormattedDate(rec.DateTime)</div>
-                    <div class="duration">@TimeSpan.FromMilliseconds(rec.DurationMs).ToString(@"mm\:ss")</div>
+                    <div class="duration">@TimeSpan.FromMilliseconds(rec.DurationMs - rec.CurrentTime).ToString(@"mm\:ss")</div>
                 </div>
                 <button @onclick="() => DeleteRecording(rec)" class="delete-btn" aria-label="Delete recording">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: @(100 - (rec.CurrentTime / rec.DurationMs * 100))%"></div>
+                </div>
             </div>
         }
     </div>
@@ -72,6 +75,7 @@
         {
             recordings = await AudioService.GetRecordings();
             AudioService.PlaybackEnded += HandlePlaybackEnded;
+            AudioService.PlaybackTimeUpdate += HandleTimeUpdate;
         }
         catch (Exception ex)
         {
@@ -139,10 +143,11 @@
 
     private string GetFormattedDate(DateTime dt)
     {
-        if (dt.Date == DateTime.Today)
-            return $"Today, {dt.ToString("h:mm tt")}";
+        var localDt = dt.ToLocalTime();
+        if (localDt.Date == DateTime.Today)
+            return $"Today, {localDt.ToString("h:mm tt")}";
         else
-            return dt.ToString("MMM d, h:mm tt");
+            return localDt.ToString("MMM d, h:mm tt");
     }
 
     private void HandlePlaybackEnded()
@@ -150,12 +155,24 @@
         foreach (var rec in recordings)
         {
             rec.IsPlaying = false;
+            rec.CurrentTime = 0;
         }
         InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleTimeUpdate(string id, double currentTime)
+    {
+        var rec = recordings.FirstOrDefault(r => r.Id == id);
+        if (rec != null)
+        {
+            rec.CurrentTime = currentTime;
+            InvokeAsync(StateHasChanged);
+        }
     }
 
     public void Dispose()
     {
         AudioService.PlaybackEnded -= HandlePlaybackEnded;
+        AudioService.PlaybackTimeUpdate -= HandleTimeUpdate;
     }
 }

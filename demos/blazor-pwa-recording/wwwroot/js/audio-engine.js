@@ -126,6 +126,11 @@ function play(id, dotnetRef) {
       currentAudio.addEventListener('ended', () => {
         dotnetRef.invokeMethodAsync('OnPlaybackEnded');
       });
+      currentAudio.addEventListener('timeupdate', () => {
+        if (dotnetRef) {
+          dotnetRef.invokeMethodAsync('OnTimeUpdate', id.toString(), currentAudio.currentTime * 1000);
+        }
+      });
       currentAudio.play();
       currentPlayingId = id;
     }

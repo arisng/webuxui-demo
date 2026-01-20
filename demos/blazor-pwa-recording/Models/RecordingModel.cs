@@ -7,4 +7,5 @@ public class RecordingModel
     public string? Id { get; set; }
     public bool IsPlaying { get; set; } = false;
     public double Progress { get; set; } = 0;
+    public double CurrentTime { get; set; } = 0;
 }

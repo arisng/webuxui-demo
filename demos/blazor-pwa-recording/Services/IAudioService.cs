@@ -11,4 +11,5 @@ public interface IAudioService
     Task PlayRecording(string id);
     Task StopPlayback();
     event Action? PlaybackEnded;
+    event Action<string, double> PlaybackTimeUpdate;
 }

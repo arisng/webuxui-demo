@@ -13,11 +13,18 @@ public class AudioService : IAudioService
     }
 
     public event Action? PlaybackEnded;
+    public event Action<string, double> PlaybackTimeUpdate;
 
     [JSInvokable]
     public void OnPlaybackEnded()
     {
         PlaybackEnded?.Invoke();
+    }
+
+    [JSInvokable]
+    public void OnTimeUpdate(string id, double currentTime)
+    {
+        PlaybackTimeUpdate?.Invoke(id, currentTime);
     }
 
     public async Task StartRecording()
