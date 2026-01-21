@@ -148,7 +148,8 @@ function play(id, dotnetRef) {
 function stopPlayback() {
   if (currentAudio) {
     currentAudio.pause();
-    currentAudio.currentTime = 0;
+    URL.revokeObjectURL(currentAudio.src);
+    currentAudio = null;
     currentPlayingId = null;
   }
 }
