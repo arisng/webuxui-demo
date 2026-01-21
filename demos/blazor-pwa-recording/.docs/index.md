@@ -5,6 +5,7 @@ Welcome to the documentation for the Blazor PWA Recording demo. This documentati
 ## [How-to Guides](./how-to/)
 Practical steps to help you achieve specific tasks.
 - [Deploy to AWS EC2 via ECR](./how-to/deploy-to-aws-ec2.md) - Step-by-step container deployment.
+- [PWA Installation](./how-to/pwa-installation.md) - Understanding and configuring app installation.
 
 ## [Reference](./reference/)
 Technical descriptions of the machinery and configuration.
