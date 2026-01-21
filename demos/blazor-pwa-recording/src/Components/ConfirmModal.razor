@@ -1,0 +1,39 @@
+@if (IsVisible)
+{
+    <div class="modal-overlay" @onclick="Cancel">
+        <div class="modal-content" @onclick:stop>
+            <div class="modal-header">
+                <h3>@Title</h3>
+                <button class="close-btn" @onclick="Cancel" aria-label="Close dialog">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>@Message</p>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" @onclick="Cancel">Cancel</button>
+                <button class="confirm-btn" @onclick="Confirm">Delete</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public string Title { get; set; } = "Confirmation";
+    [Parameter] public string Message { get; set; } = "Are you sure?";
+    [Parameter] public EventCallback<bool> OnConfirmation { get; set; }
+
+    private async Task Confirm()
+    {
+        await OnConfirmation.InvokeAsync(true);
+    }
+
+    private async Task Cancel()
+    {
+        await OnConfirmation.InvokeAsync(false);
+    }
+}

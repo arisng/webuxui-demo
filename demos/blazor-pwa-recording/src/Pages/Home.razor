@@ -4,6 +4,7 @@
 
 @using blazor_pwa_recording.Models
 @inject blazor_pwa_recording.Services.IAudioService AudioService
+@inject IJSRuntime JS
 @implements IDisposable
 
 <div class="home-container">
@@ -64,10 +65,17 @@
     </div>
 </div>
 
+<ConfirmModal IsVisible="showDeleteConfirmation" 
+              Title="Delete Recording" 
+              Message="Are you sure you want to delete this recording? This action cannot be undone." 
+              OnConfirmation="HandleDeleteConfirmation" />
+
 @code {
     private bool isRecording = false;
     private List<RecordingModel> recordings = new();
     private string? errorMessage;
+    private RecordingModel? recToDelete;
+    private bool showDeleteConfirmation = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -131,13 +139,26 @@
         StateHasChanged();
     }
 
-    private async Task DeleteRecording(RecordingModel rec)
+    private void DeleteRecording(RecordingModel rec)
     {
-        if (rec.Id != null)
+        recToDelete = rec;
+        showDeleteConfirmation = true;
+        StateHasChanged();
+    }
+
+    private async Task HandleDeleteConfirmation(bool confirmed)
+    {
+        showDeleteConfirmation = false;
+        if (confirmed && recToDelete?.Id != null)
         {
-            await AudioService.DeleteRecording(rec.Id);
-            recordings.Remove(rec);
+            // Always try to stop playback before deletion to ensure no "leaking" audio
+            await AudioService.StopPlayback();
+            
+            await AudioService.DeleteRecording(recToDelete.Id);
+            recordings.Remove(recToDelete);
         }
+        recToDelete = null;
+        StateHasChanged();
     }
 
     private string GetFormattedDate(DateTime dt)
