@@ -2,6 +2,10 @@
     "chat.tools.terminal.autoApprove": {
         "dotnet run": true,
         "New-Item": true,
-        "Set-Content": true
+        "Set-Content": true,
+        "/^python --version$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
     }
 }
