@@ -97,4 +97,40 @@ public class AudioServiceTests
         Assert.Equal("AudioApp.deleteRecording", calledIdentifier);
         Assert.Equal(id, calledArgs[0]);
     }
+
+    [Fact]
+    public async Task PlayRecording_CallsJsPlayRecording()
+    {
+        // Arrange
+        var id = "test-id";
+        string calledIdentifier = null;
+        object[] calledArgs = null;
+        _jsRuntimeMock.Setup(js => js.InvokeAsync<object>(It.IsAny<string>(), It.IsAny<object[]>()))
+            .Callback<string, object[]>((identifier, args) => { calledIdentifier = identifier; calledArgs = args; })
+            .ReturnsAsync((object)null);
+
+        // Act
+        await _audioService.PlayRecording(id);
+
+        // Assert
+        Assert.Equal("AudioApp.playRecording", calledIdentifier);
+        Assert.Equal(id, calledArgs[0]);
+        Assert.IsType<DotNetObjectReference<AudioService>>(calledArgs[1]);
+    }
+
+    [Fact]
+    public async Task StopPlayback_CallsJsStopPlayback()
+    {
+        // Arrange
+        string calledIdentifier = null;
+        _jsRuntimeMock.Setup(js => js.InvokeAsync<object>(It.IsAny<string>(), It.IsAny<object[]>()))
+            .Callback<string, object[]>((identifier, args) => calledIdentifier = identifier)
+            .ReturnsAsync((object)null);
+
+        // Act
+        await _audioService.StopPlayback();
+
+        // Assert
+        Assert.Equal("AudioApp.stopPlayback", calledIdentifier);
+    }
 }

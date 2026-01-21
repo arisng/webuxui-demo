@@ -109,9 +109,12 @@ let currentPlayingId = null;
 const recorder = new AudioRecorder();
 
 function play(id, dotnetRef) {
-  if (currentPlayingId === id && currentAudio && !currentAudio.paused) {
-    currentAudio.pause();
-    currentPlayingId = null;
+  if (currentPlayingId === id && currentAudio) {
+    if (currentAudio.paused) {
+      currentAudio.play();
+    } else {
+      currentAudio.pause();
+    }
     return;
   }
   if (currentAudio) {
@@ -124,6 +127,11 @@ function play(id, dotnetRef) {
       const url = URL.createObjectURL(recording.blob);
       currentAudio = new Audio(url);
       currentAudio.addEventListener('ended', () => {
+        currentPlayingId = null;
+        if (currentAudio) {
+          URL.revokeObjectURL(currentAudio.src);
+          currentAudio = null;
+        }
         dotnetRef.invokeMethodAsync('OnPlaybackEnded');
       });
       currentAudio.addEventListener('timeupdate', () => {
@@ -140,10 +148,9 @@ function play(id, dotnetRef) {
 function stopPlayback() {
   if (currentAudio) {
     currentAudio.pause();
-    URL.revokeObjectURL(currentAudio.src);
-    currentAudio = null;
+    currentAudio.currentTime = 0;
+    currentPlayingId = null;
   }
-  currentPlayingId = null;
 }
 
 window.AudioApp = {

@@ -110,24 +110,23 @@
 
     private async void PlayRecording(RecordingModel rec)
     {
+        if (rec.Id == null) return;
+
         // Stop any other playing recording
         foreach (var r in recordings.Where(r => r.IsPlaying && r != rec))
         {
             r.IsPlaying = false;
+            // When switching to a different recording, we call StopPlayback
+            // to ensure the previous one is fully stopped and reset.
             await AudioService.StopPlayback();
         }
 
         // Toggle IsPlaying for the selected one
         rec.IsPlaying = !rec.IsPlaying;
 
-        if (rec.IsPlaying)
-        {
-            await AudioService.PlayRecording(rec.Id);
-        }
-        else
-        {
-            await AudioService.StopPlayback();
-        }
+        // In both cases (play or pause), we call PlayRecording(rec.Id)
+        // because the JS play(id) function handles toggling for the same ID.
+        await AudioService.PlayRecording(rec.Id);
 
         StateHasChanged();
     }
