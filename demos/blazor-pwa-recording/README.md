@@ -19,3 +19,4 @@ Showcase audio recording capabilities in a Progressive Web App using Blazor WebA
 ## Documentation
 
 Using `diataxis` skill to structure documents in project's `.docs` folder.
+In addition to the conventional folders defined in diataxis framework is our custom `issues` folder.
