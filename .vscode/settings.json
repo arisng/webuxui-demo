@@ -1,0 +1,7 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "dotnet run": true,
+        "New-Item": true,
+        "Set-Content": true
+    }
+}
