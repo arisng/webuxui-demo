@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/blazor-pwa-recording.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/blazor-pwa-recording.Tests.csproj" />
+  </Folder>
+</Solution>

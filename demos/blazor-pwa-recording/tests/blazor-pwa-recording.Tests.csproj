@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\blazor-pwa-recording\blazor-pwa-recording.csproj" />
+    <ProjectReference Include="..\src\blazor-pwa-recording.csproj" />
   </ItemGroup>
 
   <ItemGroup>

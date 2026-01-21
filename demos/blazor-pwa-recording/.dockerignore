@@ -1,0 +1,8 @@
+**/.vs
+**/.vscode
+**/bin
+**/obj
+**/tests
+.git
+.gitignore
+README.md
