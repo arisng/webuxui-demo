@@ -2,18 +2,22 @@
   "name": "SonicMemo",
   "short_name": "SonicMemo",
   "description": "Professional-grade voice recording with high-fidelity audio and offline support.",
+  "lang": "en-US",
   "id": "./",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#3b82f6",
   "prefer_related_applications": false,
-  "categories": ["productivity", "utilities"],
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
   "orientation": "portrait",
   "shortcuts": [
     {
       "name": "Start Recording",
-      "url": "/",
+      "url": "./",
       "icons": [
         {
           "src": "icon-192.png",
@@ -27,13 +31,25 @@
       "src": "icon-512.png",
       "type": "image/png",
       "sizes": "512x512",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     },
     {
       "src": "icon-192.png",
       "type": "image/png",
       "sizes": "192x192",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
     }
   ]
 }
