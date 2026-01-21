@@ -6,12 +6,13 @@ Technical details for the containerized deployment of the Blazor PWA.
 
 The `Dockerfile` uses a multi-stage build to minimize image size and separate the build environment from the production artifacts.
 
-| Stage | Image | Purpose |
-| :--- | :--- | :--- |
-| `build` | `mcr.microsoft.com/dotnet/sdk:10.0` | Restores, builds, and publishes the .NET 10.0 project. |
-| `final` | `nginx:alpine` | Serves the static `wwwroot` files using Nginx on Alpine Linux. |
+| Stage   | Image                               | Purpose                                                        |
+| :------ | :---------------------------------- | :------------------------------------------------------------- |
+| `build` | `mcr.microsoft.com/dotnet/sdk:10.0` | Restores, builds, and publishes the .NET 10.0 project.         |
+| `final` | `nginx:alpine`                      | Serves the static `wwwroot` files using Nginx on Alpine Linux. |
 
 ### Build Arguments and Environment
+
 - **Context Root**: `demos/blazor-pwa-recording/`
 - **Output Path**: `/app/publish/wwwroot` inside the build stage.
 
@@ -26,4 +27,5 @@ The custom `nginx.conf` is optimized for Blazor WebAssembly SPAs.
 - `expires 1y;`: Sets long-term caching headers for immutable assets like `.wasm`, `.js`, and `.css` files.
 
 ## Exposed Ports
+
 - `80`: Standard HTTP port.
