@@ -3,7 +3,7 @@
 **Date:** 2026-01-22  
 **Target Framework:** .NET 10 (Blazor Web App)  
 **Render Mode:** InteractiveAuto  
-**Priority:** Instant First Load, Offline Awareness, iOS Compatibility
+**Priority:** Offline First (Airplane), Instant First Load, iOS Compatibility
 
 ## **Progress**
 
@@ -30,6 +30,7 @@
 - **IndexedDB** is the only storage system.
 - **Audio blobs never leave the browser** in this phase.
 - **Service worker must provide App Shell offline routing** (auto-mode fix).
+- **Workbox no-build setup** for now; plan a later migration to build-time precache manifest.
 
 ## **Feature List (Flat)**
 
@@ -40,6 +41,41 @@
   **Issue:** `.docs/issues/260122-feature-setup-wasm-pwa-standalone.md`  
   **Updated:** 2026-01-22  
   **Summary:** Keep current Blazor WASM PWA standalone setup as the baseline before migrating to InteractiveAuto.
+- **ID:** `offline-app-shell-routing`  
+  **Title:** Offline App Shell Routing  
+  **Priority:** P0  
+  **Status:** Planned  
+  **Issue:** `.docs/issues/260122-feature-offline-app-shell-routing.md`  
+  **Updated:** 2026-01-22  
+  **Summary:** Service worker intercepts navigation and serves cached `index.html` when offline.
+- **ID:** `offline-status-indicator`  
+  **Title:** Offline Status Indicator  
+  **Priority:** P1  
+  **Status:** Planned  
+  **Issue:** `.docs/issues/260122-feature-offline-status-indicator.md`  
+  **Updated:** 2026-01-22  
+  **Summary:** Header icon shows Downloading (grey/blinking), Ready (green), Offline Active (red).
+- **ID:** `offline-readiness-notification`  
+  **Title:** Offline Readiness Notification  
+  **Priority:** P1  
+  **Status:** Planned  
+  **Issue:** `.docs/issues/260122-feature-offline-readiness-notification.md`  
+  **Updated:** 2026-01-22  
+  **Summary:** Toast appears once service worker finishes caching WASM/DLL assets: “⚡ App is ready for offline use.”
+- **ID:** `workbox-build-time-precache-migration`  
+  **Title:** Workbox Build-Time Precache Migration  
+  **Priority:** P2  
+  **Status:** Planned  
+  **Issue:** TBD  
+  **Updated:** 2026-01-22  
+  **Summary:** Replace manual/no-build precache with a build-time manifest for automatic cache invalidation.
+- **ID:** `auto-stop-on-app-switch`  
+  **Title:** Auto-Stop on App Switch  
+  **Priority:** P1  
+  **Status:** Planned  
+  **Issue:** TBD  
+  **Updated:** 2026-01-22  
+  **Summary:** Stop recording on `visibilitychange` to prevent background recording loss.
 - **ID:** `instant-first-load`  
   **Title:** Instant First Load (SSR)  
   **Priority:** P2  
@@ -47,20 +83,6 @@
   **Issue:** TBD  
   **Updated:** 2026-01-22  
   **Summary:** UI is interactive immediately via server render; WASM downloads in the background.
-- **ID:** `offline-app-shell-routing`  
-  **Title:** Offline App Shell Routing  
-  **Priority:** P2  
-  **Status:** Planned  
-  **Issue:** TBD  
-  **Updated:** 2026-01-22  
-  **Summary:** Service worker intercepts navigation and serves cached `index.html` when offline.
-- **ID:** `offline-readiness-notification`  
-  **Title:** Offline Readiness Notification  
-  **Priority:** P1  
-  **Status:** Planned  
-  **Issue:** TBD  
-  **Updated:** 2026-01-22  
-  **Summary:** Toast appears once service worker finishes caching WASM/DLL assets: “⚡ App is ready for offline use.”
 - **ID:** `tap-record-tap-stop`  
   **Title:** Recording (Tap-to-Record / Tap-to-Stop)  
   **Priority:** P0  
@@ -75,13 +97,6 @@
   **Issue:** `.docs/issues/260122-feature-mime-type-smart-detection.md`  
   **Updated:** 2026-01-22  
   **Summary:** MediaRecorder iterates supported types in order: `audio/webm;codecs=opus`, `audio/mp4`, `audio/webm`, `audio/wav`.
-- **ID:** `auto-stop-on-app-switch`  
-  **Title:** Auto-Stop on App Switch  
-  **Priority:** P1  
-  **Status:** Planned  
-  **Issue:** TBD  
-  **Updated:** 2026-01-22  
-  **Summary:** Stop recording on `visibilitychange` to prevent background recording loss.
 - **ID:** `local-storage-indexeddb`  
   **Title:** Local Storage (IndexedDB)  
   **Priority:** P0  
@@ -103,13 +118,6 @@
   **Issue:** `.docs/issues/260122-feature-recordings-list-playback.md`  
   **Updated:** 2026-01-22  
   **Summary:** List newest-first with play and delete actions.
-- **ID:** `offline-status-indicator`  
-  **Title:** Offline Status Indicator  
-  **Priority:** P2  
-  **Status:** Planned  
-  **Issue:** TBD  
-  **Updated:** 2026-01-22  
-  **Summary:** Header icon shows Downloading (grey/blinking), Ready (green), Offline Active (red).
 
 ## **UI/UX Baseline**
 
