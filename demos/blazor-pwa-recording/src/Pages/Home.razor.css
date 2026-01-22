@@ -173,6 +173,10 @@
     transition: color 0.3s;
 }
 
+.recording-card .delete-btn {
+    cursor: pointer;
+}
+
 .recording-card .play-btn:hover,
 .recording-card .delete-btn:hover {
     color: #3b82f6;

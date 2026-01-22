@@ -4,13 +4,21 @@
     left: 0;
     width: 100vw;
     height: 100vh;
+    min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: env(safe-area-inset-top, 24px) env(safe-area-inset-right, 20px) env(safe-area-inset-bottom, 24px) env(safe-area-inset-left, 20px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
     animation: fadeIn 0.2s ease-out;
+    cursor: pointer;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .modal-content {
@@ -20,6 +28,12 @@
     padding: 24px;
     width: 90%;
     max-width: 400px;
+    max-height: calc(100vh - 96px);
+    max-height: calc(100svh - 96px);
+    max-height: calc(100dvh - 96px);
+    touch-action: manipulation;
+    overflow: auto;
+    cursor: default;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     animation: slideUp 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
@@ -55,6 +69,8 @@
     cursor: pointer;
     padding: 4px;
     transition: color 0.2s;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .close-btn:hover {
@@ -86,6 +102,9 @@
     cursor: pointer;
     transition: all 0.2s;
     font-family: 'Space Grotesk', sans-serif;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
 }
 
 .cancel-btn {

@@ -1,7 +1,7 @@
 @if (IsVisible)
 {
-    <div class="modal-overlay" @onclick="Cancel">
-        <div class="modal-content" @onclick:stop>
+    <div class="modal-overlay" @onclick="Cancel" @onpointerdown="Cancel">
+        <div class="modal-content" @onclick:stopPropagation="true" @onpointerdown:stopPropagation="true">
             <div class="modal-header">
                 <h3>@Title</h3>
                 <button class="close-btn" @onclick="Cancel" aria-label="Close dialog">
@@ -27,13 +27,33 @@
     [Parameter] public string Message { get; set; } = "Are you sure?";
     [Parameter] public EventCallback<bool> OnConfirmation { get; set; }
 
-    private async Task Confirm()
+    private bool _isHandlingInteraction;
+
+    private Task Confirm()
     {
-        await OnConfirmation.InvokeAsync(true);
+        return HandleConfirmationAsync(true);
     }
 
-    private async Task Cancel()
+    private Task Cancel()
     {
-        await OnConfirmation.InvokeAsync(false);
+        return HandleConfirmationAsync(false);
+    }
+
+    private async Task HandleConfirmationAsync(bool confirmed)
+    {
+        if (_isHandlingInteraction)
+        {
+            return;
+        }
+
+        _isHandlingInteraction = true;
+        try
+        {
+            await OnConfirmation.InvokeAsync(confirmed);
+        }
+        finally
+        {
+            _isHandlingInteraction = false;
+        }
     }
 }

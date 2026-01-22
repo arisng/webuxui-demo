@@ -84,9 +84,17 @@ class AudioStore {
     const tx = db.transaction('Recordings', 'readwrite');
     const store = tx.objectStore('Recordings');
     return new Promise((resolve, reject) => {
-      const request = store.delete(id);
-      request.onsuccess = resolve;
-      request.onerror = reject;
+      try {
+        const request = store.delete(id);
+        request.onsuccess = () => resolve();
+        request.onerror = (event) => {
+          console.error('AudioStore.delete: failed to delete recording', id, event.target?.error);
+          reject(event.target?.error || new Error('IndexedDB delete failed'));
+        };
+      } catch (error) {
+        console.error('AudioStore.delete: exception while deleting recording', id, error);
+        reject(error);
+      }
     });
   }
 
@@ -146,12 +154,25 @@ function play(id, dotnetRef) {
 }
 
 function stopPlayback() {
-  if (currentAudio) {
-    currentAudio.pause();
-    URL.revokeObjectURL(currentAudio.src);
-    currentAudio = null;
+  if (!currentAudio) {
     currentPlayingId = null;
+    return;
   }
+
+  if (typeof currentAudio.pause === 'function') {
+    try {
+      currentAudio.pause();
+    } catch (error) {
+      console.warn('AudioApp.stopPlayback: pause failed', error);
+    }
+  }
+
+  if (currentAudio.src) {
+    URL.revokeObjectURL(currentAudio.src);
+  }
+
+  currentAudio = null;
+  currentPlayingId = null;
 }
 
 window.AudioApp = {
@@ -166,7 +187,13 @@ window.AudioApp = {
     const recordings = await audioStore.getAll();
     return recordings.map(r => ({ id: r.id.toString(), dateTime: r.timestamp, durationMs: r.duration, isPlaying: false, progress: 0 }));
   },
-  deleteRecording: (id) => audioStore.delete(parseInt(id)),
-  playRecording: (id, dotnetRef) => play(parseInt(id), dotnetRef),
+  deleteRecording: (id) => {
+    const numericId = parseInt(id, 10);
+    if (Number.isNaN(numericId)) {
+      throw new Error(`AudioApp.deleteRecording: invalid recording id "${id}"`);
+    }
+    return audioStore.delete(numericId);
+  },
+  playRecording: (id, dotnetRef) => play(parseInt(id, 10), dotnetRef),
   stopPlayback: () => stopPlayback()
 };
