@@ -86,4 +86,47 @@ public class HomeTests : BunitContext
         _audioServiceMock.Verify(s => s.DeleteRecording(It.IsAny<string>()), Times.Never);
         Assert.Contains("recording-card", cut.Markup);
     }
+
+    [Fact]
+    public async Task ClickRecord_StartsRecordingAndShowsStop()
+    {
+        // Arrange
+        _audioServiceMock.Setup(s => s.GetRecordings()).ReturnsAsync(new List<RecordingModel>());
+        _audioServiceMock.Setup(s => s.StartRecording()).Returns(Task.CompletedTask);
+
+        var cut = Render<Home>();
+
+        // Act
+        await cut.InvokeAsync(() => cut.Find(".record-button").Click());
+
+        // Assert
+        _audioServiceMock.Verify(s => s.StartRecording(), Times.Once);
+        Assert.Contains(">STOP<", cut.Markup);
+    }
+
+    [Fact]
+    public async Task ClickRecordTwice_StopsRecordingAndReloads()
+    {
+        // Arrange
+        var recordingsAfterStop = new List<RecordingModel>
+        {
+            new RecordingModel { Id = "1", DateTime = DateTime.Now, DurationMs = 5000 }
+        };
+        _audioServiceMock.SetupSequence(s => s.GetRecordings())
+            .ReturnsAsync(new List<RecordingModel>())
+            .ReturnsAsync(recordingsAfterStop);
+        _audioServiceMock.Setup(s => s.StartRecording()).Returns(Task.CompletedTask);
+        _audioServiceMock.Setup(s => s.StopRecording()).ReturnsAsync(new RecordingModel());
+
+        var cut = Render<Home>();
+
+        // Act
+        await cut.InvokeAsync(() => cut.Find(".record-button").Click());
+        await cut.InvokeAsync(() => cut.Find(".record-button").Click());
+
+        // Assert
+        _audioServiceMock.Verify(s => s.StopRecording(), Times.Once);
+        _audioServiceMock.Verify(s => s.GetRecordings(), Times.Exactly(2));
+        Assert.Contains("recording-card", cut.Markup);
+    }
 }

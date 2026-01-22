@@ -6,7 +6,7 @@ class AudioRecorder {
 
   async start() {
     this.startTime = Date.now();
-    const mimeTypes = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/wav'];
+    const mimeTypes = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm', 'audio/wav'];
     let selectedMimeType = null;
     for (let type of mimeTypes) {
       if (MediaRecorder.isTypeSupported(type)) {
@@ -185,6 +185,7 @@ window.AudioApp = {
   },
   getRecordings: async () => {
     const recordings = await audioStore.getAll();
+    recordings.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
     return recordings.map(r => ({ id: r.id.toString(), dateTime: r.timestamp, durationMs: r.duration, isPlaying: false, progress: 0 }));
   },
   deleteRecording: (id) => {
