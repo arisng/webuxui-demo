@@ -1,5 +1,6 @@
 # **Product Specification: Blazor Recording PWA (POC)**
 
+Version: 1
 Date: 2026-01-14  
 Target Framework: .NET 10 (Blazor Web App)  
 Type: Progressive Web App (PWA)  
