@@ -43,8 +43,20 @@ if (!self.workbox) {
     });
 
     self.addEventListener('activate', (event) => {
-        event.waitUntil(notifyClients({ type: 'offline-ready', version: self.assetsManifest.version }));
+        event.waitUntil(notifyClientsIfReady());
     });
+}
+
+async function notifyClientsIfReady() {
+    try {
+        const appShell = await workbox.precaching.matchPrecache('index.html');
+        if (!appShell) {
+            return;
+        }
+        await notifyClients({ type: 'offline-ready', version: self.assetsManifest.version });
+    } catch (error) {
+        // If precache lookup fails, skip signaling readiness.
+    }
 }
 
 async function notifyClients(message) {

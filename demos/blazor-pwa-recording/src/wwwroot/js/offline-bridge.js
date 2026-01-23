@@ -4,6 +4,7 @@
     let isReady = false;
     let isOnline = navigator.onLine;
     let lastStatus = null;
+    let pendingReadyVersion = null;
 
     const getStatus = () => {
         if (!isOnline) {
@@ -37,7 +38,18 @@
     };
 
     const handleReady = (version) => {
+        if (!version) {
+            return;
+        }
+        pendingReadyVersion = version;
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+            applyReady(version);
+        }
+    };
+
+    const applyReady = (version) => {
         isReady = true;
+        pendingReadyVersion = null;
         emitStatus();
         if (dotNetRef && shouldShowToast(version)) {
             dotNetRef.invokeMethodAsync("ShowOfflineReadyToast");
@@ -66,6 +78,9 @@
 
         navigator.serviceWorker.addEventListener("controllerchange", () => {
             hydrateFromStorage();
+            if (pendingReadyVersion && navigator.serviceWorker.controller) {
+                applyReady(pendingReadyVersion);
+            }
             emitStatus();
         });
 
@@ -73,9 +88,6 @@
             await navigator.serviceWorker.register("service-worker.js", { updateViaCache: "none" });
             await navigator.serviceWorker.ready;
             hydrateFromStorage();
-            if (!isReady && navigator.serviceWorker.controller) {
-                isReady = true;
-            }
         } catch (error) {
             // Service worker registration failures should not block UI.
         }
