@@ -12,6 +12,7 @@
 **/cert.pem
 **/key.pem
 **/devcert.crt
+**/devcert.pem
 
 # User-specific files
 *.rsuser

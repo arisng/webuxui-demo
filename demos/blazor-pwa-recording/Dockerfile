@@ -16,11 +16,16 @@ RUN dotnet publish "src/blazor-pwa-recording.csproj" -c Release -o /app/publish 
 FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 
+# Install openssl for generating self-signed certificates
+RUN apk add --no-cache openssl && \
+    mkdir -p /etc/ssl/certs /etc/ssl/private && \
+    openssl req -x509 -newkey rsa:2048 -keyout /etc/ssl/private/key.pem -out /etc/ssl/certs/cert.pem -days 365 -nodes -subj "/CN=localhost"
+
 # Copy published files from build stage
 COPY --from=build /app/publish/wwwroot .
 
 # Copy custom nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
 
-EXPOSE 80
+EXPOSE 80 443
 CMD ["nginx", "-g", "daemon off;"]
