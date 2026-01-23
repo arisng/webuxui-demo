@@ -12,7 +12,7 @@ Scope is Blazor WASM standalone only; InteractiveAuto/Server is not supported in
 
 ## **Implementation Notes (Actual)**
 
-- Workbox no-build is used via CDN (`workbox-sw`) in `src/wwwroot/service-worker.published.js`.
+- Workbox no-build loads from CDN with a local fallback (`src/wwwroot/lib/workbox/workbox-sw.js`) in `src/wwwroot/service-worker.published.js`.
 - Navigation requests use `NetworkFirst` with a catch handler that serves cached `index.html`.
 - Precache list is derived from `service-worker-assets.js` (manual/no-build) and passed to `precacheAndRoute`.
 - Works for client-side routes in WASM standalone (app shell fallback when offline).
@@ -32,7 +32,7 @@ Scope is Blazor WASM standalone only; InteractiveAuto/Server is not supported in
 
 ## **Workbox Notes (No-Build)**
 
-- Use the CDN `workbox-sw` loader and call `precacheAndRoute()` with a manual list of `{ url, revision }`.
+- Use the CDN `workbox-sw` loader with a local fallback and call `precacheAndRoute()` with a manual list of `{ url, revision }`.
 - Keep cache names versioned manually until build-time precache is introduced.
 
 ## **Future Migration Notes (Build-Time Precache)**
@@ -50,6 +50,7 @@ Scope is Blazor WASM standalone only; InteractiveAuto/Server is not supported in
 ## **Verification (Pending)**
 
 - Offline verification must use a published build; debug mode uses the no-op `service-worker.js`.
+- Service worker install requires a secure context; untrusted HTTPS certs will block install (use `http://localhost` for testing locally or trust the cert).
 - Publish build, load once online, reload to ensure the service worker controls the page, then go offline and verify refresh + deep links render the app shell.
 - In DevTools, confirm the service worker is activated and assets are served from Service Worker or memory cache on reload.
 
