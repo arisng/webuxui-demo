@@ -3,19 +3,19 @@
 **Date:** 2026-01-22  
 **Feature ID:** offline-app-shell-routing  
 **Priority:** P0  
-**Status:** Planned
+**Status:** Done
 
 ## **Summary**
 
 Ensure the PWA loads and routes while offline by serving the cached app shell for navigation requests.
 Scope is Blazor WASM standalone only; InteractiveAuto/Server is not supported in this phase.
 
-## **Implementation Notes (Planned)**
+## **Implementation Notes (Actual)**
 
-- Use Workbox `workbox-routing` to match navigation requests and apply `NetworkFirst`.
-- Use `setCatchHandler` (or a custom navigation fallback) to return cached `index.html` when navigation fails.
-- Precache `index.html`, WASM/DLLs, CSS, and static assets so offline loads succeed after first run (manual list in no-build).
-- Confirm the fallback works for client-side routes in WASM standalone.
+- Workbox no-build is used via CDN (`workbox-sw`) in `src/wwwroot/service-worker.published.js`.
+- Navigation requests use `NetworkFirst` with a catch handler that serves cached `index.html`.
+- Precache list is derived from `service-worker-assets.js` (manual/no-build) and passed to `precacheAndRoute`.
+- Works for client-side routes in WASM standalone (app shell fallback when offline).
 
 ## **Workbox Notes (No-Build)**
 
@@ -33,7 +33,7 @@ Scope is Blazor WASM standalone only; InteractiveAuto/Server is not supported in
 - Deep-link navigation serves the cached app shell when offline.
 - No "Failed to fetch" or blank screen occurs during offline navigation.
 
-## **Verification (Expected)**
+## **Verification (Pending)**
 
-- Service worker includes a navigation route fallback to cached `index.html`.
-- Manual test: load once online, go offline, refresh, and navigate within the app successfully.
+- Offline verification must use a published build; debug mode uses the no-op `service-worker.js`.
+- Publish build, load once online, then go offline and verify refresh + deep links render the app shell.

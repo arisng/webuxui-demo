@@ -1,12 +1,87 @@
 ﻿@inherits LayoutComponentBase
+@implements IAsyncDisposable
+@inject IJSRuntime JS
 
 <div class="app-shell">
-    <header class="glass-panel">
+    <header class="glass-panel app-header">
         <h1>SonicMemo</h1>
+        <OfflineStatusIndicator Status="@_offlineStatus" />
     </header>
     <main>
         @Body
     </main>
 </div>
 
-<OfflineToast />
+<OfflineToast IsVisible="@_showOfflineToast"
+              Message="App is ready for offline use."
+              OnDismiss="@HideOfflineToast" />
+
+@code {
+    private const int ToastAutoDismissMs = 3500;
+    private string _offlineStatus = "downloading";
+    private bool _showOfflineToast;
+    private DotNetObjectReference<MainLayout>? _dotNetRef;
+    private CancellationTokenSource? _toastCts;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        _dotNetRef = DotNetObjectReference.Create(this);
+        await JS.InvokeVoidAsync("offlineBridge.init", _dotNetRef);
+    }
+
+    [JSInvokable]
+    public Task SetOfflineStatus(string status)
+    {
+        _offlineStatus = status;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    [JSInvokable]
+    public Task ShowOfflineReadyToast()
+    {
+        _showOfflineToast = true;
+        StartToastAutoDismiss();
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private void StartToastAutoDismiss()
+    {
+        _toastCts?.Cancel();
+        _toastCts?.Dispose();
+        _toastCts = new CancellationTokenSource();
+        _ = AutoDismissToastAsync(_toastCts.Token);
+    }
+
+    private async Task AutoDismissToastAsync(CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(ToastAutoDismissMs, token);
+            _showOfflineToast = false;
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (TaskCanceledException)
+        {
+        }
+    }
+
+    private Task HideOfflineToast()
+    {
+        _toastCts?.Cancel();
+        _showOfflineToast = false;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        _toastCts?.Cancel();
+        _toastCts?.Dispose();
+        _dotNetRef?.Dispose();
+        return ValueTask.CompletedTask;
+    }
+}

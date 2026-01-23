@@ -3,20 +3,18 @@
 **Date:** 2026-01-22  
 **Feature ID:** offline-readiness-notification  
 **Priority:** P1  
-**Status:** Planned
+**Status:** Done
 
 ## **Summary**
 
 Show a one-time toast when the app is fully cached and safe to use offline.
 Scope is Blazor WASM standalone only; InteractiveAuto/Server is not supported in this phase.
 
-## **Implementation Notes (Planned)**
+## **Implementation Notes (Actual)**
 
-- Use `workbox-window` to listen for `activated` and `controlling` events.
-- Fire readiness after `activated` (first install) **and** the page is controlled; if `clients.claim()` is enabled, this can happen on first load, otherwise it will occur on the next navigation.
-- Use JS interop to invoke a Blazor toast method once per install/session.
-- The toast should be non-blocking and auto-dismiss after a few seconds.
- - In no-build mode, readiness is based on service worker control + manual precache completion.
+- Service worker posts `{ type: "offline-ready", version }` on `activate` after claiming clients.
+- `offline-bridge.js` listens for the message and triggers a one-time toast per version using localStorage.
+- `MainLayout.razor` exposes a `[JSInvokable]` method to show the toast and auto-dismiss.
 
 ## **Acceptance Criteria**
 
@@ -29,7 +27,7 @@ Scope is Blazor WASM standalone only; InteractiveAuto/Server is not supported in
 - Swap manual precache tracking for Workbox build-time manifest completion.
 - Keep the toast trigger logic based on `activated` + `controlling`.
 
-## **Verification (Expected)**
+## **Verification (Pending)**
 
-- JS interop emits a readiness event only after service worker control + cache warm signal.
-- UI displays a single readiness toast and auto-dismisses.
+- Offline verification must use a published build; debug mode uses the no-op `service-worker.js`.
+- Publish build, load once online, and verify the toast appears once per service worker version.

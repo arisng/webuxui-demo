@@ -7,7 +7,7 @@
 
 ## **Progress**
 
-- **Progress:** 6/11 Done
+- **Progress:** 9/12 Done
 - **In-Progress:** None
 - **Last Updated:** 2026-01-22
 
@@ -44,21 +44,21 @@
 - **ID:** `offline-app-shell-routing`  
   **Title:** Offline App Shell Routing  
   **Priority:** P0  
-  **Status:** Planned  
+  **Status:** Done  
   **Issue:** `.docs/issues/260122-feature-offline-app-shell-routing.md`  
   **Updated:** 2026-01-22  
   **Summary:** Service worker intercepts navigation and serves cached `index.html` when offline.
 - **ID:** `offline-status-indicator`  
   **Title:** Offline Status Indicator  
   **Priority:** P1  
-  **Status:** Planned  
+  **Status:** Done  
   **Issue:** `.docs/issues/260122-feature-offline-status-indicator.md`  
   **Updated:** 2026-01-22  
   **Summary:** Header icon shows Downloading (grey/blinking), Ready (green), Offline Active (red).
 - **ID:** `offline-readiness-notification`  
   **Title:** Offline Readiness Notification  
   **Priority:** P1  
-  **Status:** Planned  
+  **Status:** Done  
   **Issue:** `.docs/issues/260122-feature-offline-readiness-notification.md`  
   **Updated:** 2026-01-22  
   **Summary:** Toast appears once service worker finishes caching WASM/DLL assets: “⚡ App is ready for offline use.”

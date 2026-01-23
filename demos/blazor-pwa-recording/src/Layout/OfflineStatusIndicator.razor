@@ -1,0 +1,36 @@
+﻿<div class="offline-indicator offline-indicator--@StatusClass"
+     role="status"
+     aria-live="polite"
+     aria-label="@AriaLabel"
+     title="@Title">
+    <span class="offline-indicator__dot"></span>
+    <span class="offline-indicator__label">@Label</span>
+</div>
+
+@code {
+    [Parameter]
+    public string Status { get; set; } = "downloading";
+
+    private string StatusClass => Status switch
+    {
+        "ready" => "ready",
+        "offline" => "offline",
+        _ => "downloading"
+    };
+
+    private string Label => StatusClass switch
+    {
+        "ready" => "Ready",
+        "offline" => "Offline",
+        _ => "Downloading"
+    };
+
+    private string Title => StatusClass switch
+    {
+        "ready" => "Offline ready",
+        "offline" => "Offline active",
+        _ => "Caching offline assets"
+    };
+
+    private string AriaLabel => $"Offline status: {Label}";
+}

@@ -3,19 +3,19 @@
 **Date:** 2026-01-22  
 **Feature ID:** offline-status-indicator  
 **Priority:** P1  
-**Status:** Planned
+**Status:** Done
 
 ## **Summary**
 
 Show a persistent status indicator for Downloading, Ready, and Offline Active states.
 Scope is Blazor WASM standalone only; InteractiveAuto/Server is not supported in this phase.
 
-## **Implementation Notes (Planned)**
+## **Implementation Notes (Actual)**
 
-- Track service worker installation/activation and cache readiness to switch from Downloading to Ready.
-- Use `navigator.onLine` and `online`/`offline` events to indicate Offline Active.
-- Expose state to Blazor via JS interop and update a header icon with color and animation.
-- In no-build mode, treat "Ready" as `workbox-window` `controlling` after install (or after next navigation if `clients.claim()` is not enabled).
+- `offline-bridge.js` tracks `navigator.onLine` plus service worker messages and updates status.
+- `OfflineStatusIndicator.razor` renders the label + animated dot with CSS states.
+- `MainLayout.razor` receives status via JS interop and binds it to the header indicator.
+- In no-build mode, readiness is based on service worker `activate` + `clients.claim()` messaging.
 
 ## **Use Cases**
 
@@ -36,7 +36,7 @@ Scope is Blazor WASM standalone only; InteractiveAuto/Server is not supported in
 - When caching completes and the service worker controls the page, indicator shows Ready (green).
 - When offline, indicator shows Offline Active (red) and returns to Ready when online.
 
-## **Verification (Expected)**
+## **Verification (Pending)**
 
-- Header component binds to an offline status model.
-- JS interop module dispatches readiness and network events to Blazor.
+- Offline verification must use a published build; debug mode uses the no-op `service-worker.js`.
+- Publish build, toggle offline/online, and verify Downloading → Ready → Offline state transitions.

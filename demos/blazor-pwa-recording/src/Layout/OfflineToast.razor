@@ -1,18 +1,18 @@
 @if (IsVisible)
 {
-    <div class="toast-pill">
-        <span class="text">Ready for offline</span>
-        <button @onclick="Reload">Update</button>
+    <div class="toast-pill" role="status" aria-live="polite">
+        <span class="text">@Message</span>
+        <button type="button" class="dismiss" @onclick="OnDismiss">Dismiss</button>
     </div>
 }
 
 @code {
-    public bool IsVisible { get; set; } = true;
+    [Parameter]
+    public bool IsVisible { get; set; }
 
-    private void Reload()
-    {
-        // Mock reload: console log for demo
-        Console.WriteLine("Reloading app...");
-        IsVisible = false;
-    }
+    [Parameter]
+    public string Message { get; set; } = "App is ready for offline use.";
+
+    [Parameter]
+    public EventCallback OnDismiss { get; set; }
 }
