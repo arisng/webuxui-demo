@@ -37,5 +37,4 @@ The MEP is kept in `.docs/issues/260122-blazor-recording-pwa-poc-mep.md` and is 
 ### Current spec files
 
 - MEP (living spec): `.docs/issues/260122-blazor-recording-pwa-poc-mep.md`
-- v1 spec: `.docs/issues/260120-blazor-recording-pwa-poc-v1.md`
-- v3 spec: `.docs/issues/260122-blazor-recording-pwa-poc-v3.md`
+
