@@ -8,6 +8,11 @@
 # dotenv files
 .env
 
+# Development SSL certificates
+**/cert.pem
+**/key.pem
+**/devcert.crt
+
 # User-specific files
 *.rsuser
 *.suo
@@ -388,6 +393,8 @@ FodyWeavers.xsd
 
 # VS Code files for those working on multiple tools
 .vscode/*
+!.vscode/mcp.linux.json
+!.vscode/mcp.windows.json
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
