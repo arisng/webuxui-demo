@@ -2,7 +2,17 @@
 // offline support. See https://aka.ms/blazor-offline-considerations
 
 self.importScripts('./service-worker-assets.js');
-self.importScripts('https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js');
+try {
+    self.importScripts('https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js');
+} catch (error) {
+    self.importScripts('./lib/workbox/workbox-sw.js');
+}
+if (!self.workbox) {
+    try {
+        self.importScripts('./lib/workbox/workbox-sw.js');
+    } catch (error) {
+    }
+}
 
 if (!self.workbox) {
     console.warn('Workbox failed to load. Offline support will be limited.');
