@@ -8,7 +8,7 @@
 
     const getStatus = () => {
         if (!isOnline) {
-            return "offline";
+            return isReady ? "offline" : "offline-not-ready";
         }
         return isReady ? "ready" : "downloading";
     };

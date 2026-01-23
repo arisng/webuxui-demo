@@ -4,7 +4,7 @@
      aria-label="@AriaLabel"
      title="@Title">
     <span class="offline-indicator__dot"></span>
-    <span class="offline-indicator__label">@Label</span>
+    <span class="offline-indicator__label">@Title</span>
 </div>
 
 @code {
@@ -15,22 +15,17 @@
     {
         "ready" => "ready",
         "offline" => "offline",
+        "offline-not-ready" => "offline-not-ready",
         _ => "downloading"
     };
 
-    private string Label => StatusClass switch
-    {
-        "ready" => "Ready",
-        "offline" => "Offline",
-        _ => "Downloading"
-    };
-
-    private string Title => StatusClass switch
+    private string Title => Status switch
     {
         "ready" => "Offline ready",
         "offline" => "Offline active",
+        "offline-not-ready" => "Offline (not cached)",
         _ => "Caching offline assets"
     };
 
-    private string AriaLabel => $"Offline status: {Label}";
+    private string AriaLabel => $"Offline status: {Title}";
 }

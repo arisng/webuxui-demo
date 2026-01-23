@@ -31,6 +31,11 @@
     box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
 }
 
+.offline-indicator--offline-not-ready .offline-indicator__dot {
+    background: #f59e0b;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+}
+
 .offline-indicator__label {
     white-space: nowrap;
 }
