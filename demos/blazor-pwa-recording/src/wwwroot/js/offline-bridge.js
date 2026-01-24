@@ -10,7 +10,11 @@
     let pendingUpdateVersion = null;
     let updateRequested = false;
     let serviceWorkerRegistration = null;
+    // "Controller" means a service worker that is actively controlling this page.
+    // On first install, the SW is installed/activated but won't control existing pages
+    // until a reload. We use this to avoid showing update prompts on first install.
     let hadController = false;
+    let hadControllerAtInit = false;
 
     const getStatus = () => {
         if (!isOnline) {
@@ -76,7 +80,8 @@
     };
 
     const showUpdatePrompt = (version) => {
-        if (!hadController || !dotNetRef || !shouldShowUpdatePrompt(version)) {
+        // Only show update prompts if a controller already existed at startup.
+        if (!hadControllerAtInit || !dotNetRef || !shouldShowUpdatePrompt(version)) {
             return;
         }
         dotNetRef.invokeMethodAsync("ShowAppUpdateToast", version)
@@ -84,7 +89,8 @@
     };
 
     const showUpdatePromptForce = () => {
-        if (!hadController || !dotNetRef) {
+        // Same guard for forced prompt from manual "Check updates".
+        if (!hadControllerAtInit || !dotNetRef) {
             return;
         }
         if (hasShownWaitingPrompt()) {
@@ -163,6 +169,7 @@
             dotNetRef = dotNetObject;
             isOnline = navigator.onLine;
             hadController = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
+            hadControllerAtInit = hadController;
             hydrateFromStorage();
             emitStatus();
 

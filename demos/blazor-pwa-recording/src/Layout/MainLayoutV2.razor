@@ -34,15 +34,15 @@
     </main>
 </div>
 
-<OfflineToast IsVisible="@_showOfflineToast"
-              Message="App is ready for offline use."
-              OnDismiss="@HideOfflineToast" />
-<OfflineToast IsVisible="@_showUpdateToast"
-              Message="@_updateToastMessage"
-              ActionLabel="@_updateActionLabel"
-              DismissLabel="@_updateDismissLabel"
-              OnAction="@ApplyUpdate"
-              OnDismiss="@HideUpdateToast" />
+<Toast IsVisible="@_showOfflineToast"
+       Message="App is ready for offline use."
+       OnDismiss="@HideOfflineToast" />
+<Toast IsVisible="@_showUpdateToast"
+       Message="@_updateToastMessage"
+       ActionLabel="@_updateActionLabel"
+       DismissLabel="@_updateDismissLabel"
+       OnAction="@ApplyUpdate"
+       OnDismiss="@HideUpdateToast" />
 
 @code {
     private string _offlineStatus = "downloading";
@@ -52,7 +52,7 @@
     private string _updateToastMessage = "Update available.";
     private string? _updateActionLabel = "Update";
     private string _updateDismissLabel = "Later";
-    private DotNetObjectReference<MainLayout>? _dotNetRef;
+    private DotNetObjectReference<MainLayoutV2>? _dotNetRef;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
