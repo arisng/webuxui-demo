@@ -16,9 +16,20 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# 2. Run the server using dotnet-serve from the DEMO_ROOT
-echo "🌐 Starting server on http://localhost:8080..."
-echo "📂 Serving directory: $PUBLISH_DIR"
+# 2. Run the server
+# Get local IP for mobile access
+LOCAL_IP=$(ip route get 1.1.1.1 2>/dev/null | awk '{print $7}' || hostname -I | awk '{print $1}')
 
+echo "🌐 Starting server..."
+echo "📂 Serving directory: $PUBLISH_DIR"
+echo ""
+echo "📱 To access on your mobile device (same WiFi):"
+echo "   http://$LOCAL_IP:8080"
+echo ""
+echo "💻 Local access:"
+echo "   http://localhost:8080"
+echo ""
+
+# --address 0.0.0.0 (or 'any') allows connections from other devices on the network
 # --fallback-file is essential for Blazor WASM client-side routing
-dotnet serve -d "$PUBLISH_DIR" -p 8080 --fallback-file index.html
+dotnet serve -d "$PUBLISH_DIR" -p 8080 -a any --fallback-file index.html
