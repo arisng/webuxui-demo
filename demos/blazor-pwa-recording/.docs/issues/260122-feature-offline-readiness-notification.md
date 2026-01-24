@@ -12,8 +12,9 @@ Scope is Blazor WASM standalone only; InteractiveAuto/Server is not supported in
 
 ## **Implementation Notes (Actual)**
 
-- Service worker posts `{ type: "offline-ready", version }` on `activate` after claiming clients.
-- `offline-bridge.js` listens for the message and triggers a one-time toast per version using localStorage.
+- Service worker posts `{ type: "offline-ready", version }` only after `index.html` is confirmed in precache.
+- `offline-bridge.js` waits for both the `offline-ready` message and a controlling service worker before marking Ready.
+- A one-time toast is triggered per version using localStorage.
 - `MainLayout.razor` exposes a `[JSInvokable]` method to show the toast and auto-dismiss.
 
 ## **Docs Alignment (Offline Support)**
@@ -21,13 +22,6 @@ Scope is Blazor WASM standalone only; InteractiveAuto/Server is not supported in
 - Offline support is only enabled for published builds and requires a first online visit to cache resources.
 - A page reload is typically required before the service worker controls the page.
 - `navigator.onLine` is not a reliable signal of offline readiness.
-
-## **Implementation Plan (Proposed)**
-
-- Emit the `offline-ready` message only after `precacheAndRoute` is set and `matchPrecache("index.html")` succeeds.
-- In `offline-bridge.js`, set Ready only when `navigator.serviceWorker.controller` exists and `offline-ready` is received.
-- Show a “ready” toast only after the above condition is met (avoid showing while online but not cached).
-- (Optional) Add a one-time “Reload to finish offline setup” prompt when SW activates but the page is not yet controlled.
 
 ## **Acceptance Criteria**
 
