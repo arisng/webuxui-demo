@@ -6,51 +6,12 @@ The Blazor PWA Cheatsheet provides a comprehensive, factual overview of key conf
 
 Blazor PWAs combine Blazor WebAssembly with PWA standards (Web App Manifest, Service Worker) to enable installable, offline-capable web applications. Configurations are defined in project files, manifest JSON, and JavaScript service workers, with build-time generation of assets. In .NET 10, Blazor WebAssembly includes enhanced performance optimizations and improved PWA tooling.
 
-## Project Configuration
-
-### .csproj Properties
-
-Blazor PWA projects use these MSBuild properties for enabling and configuring PWA features.
-
-| Property                              | Type    | Default | Description                                                                                                                          |
-| ------------------------------------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `ServiceWorkerAssetsManifest`         | string  | (none)  | Specifies the filename for the generated service worker assets manifest (e.g., `service-worker-assets.js`). Required for PWA builds. |
-| `RunAOTCompilation`                   | boolean | false   | Enables Ahead-of-Time compilation for WebAssembly, improving runtime performance at the cost of larger bundle size.                  |
-| `BlazorWebAssemblyPreserveWhitespace` | boolean | false   | Preserves whitespace in Blazor components for debugging; set to true for development.                                                |
-| `JavaScriptBundlingEnabled`           | boolean | false   | Enables JavaScript bundling with tools like esbuild for optimized builds.                                                            |
-| `OverrideHtmlAssetPlaceholders`       | boolean | false   | Allows customization of HTML asset placeholders in index.html.                                                                       |
-
-**Example**
-```xml
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
-    <RunAOTCompilation>true</RunAOTCompilation>
-    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
-  </PropertyGroup>
-</Project>
-```
-
-**Notes**
-- Properties are evaluated at build time; changes require rebuild.
-- AOT increases download size by ~2-3x but reduces startup time.
-- In .NET 10, AOT compilation is more efficient and supports additional optimizations.
-
-### Service Worker Item Group
-
-Defines which service worker files are included in the build.
-
-**Example**
-```xml
-<ItemGroup>
-  <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
-</ItemGroup>
-```
-
-**Notes**
-- `Include` points to development service worker; `PublishedContent` to production version.
-- Only one ServiceWorker item is supported per project.
+## Glossary
+- **PWA**: Progressive Web App - installable, offline-capable web app
+- **AOT**: Ahead-of-Time compilation - compiles .NET to WebAssembly at build time
+- **Service Worker**: Background script for caching and offline functionality
+- **Workbox**: Google's library for advanced service worker caching strategies
+- **Manifest**: JSON file defining PWA metadata (name, icons, etc.)
 
 ## Web App Manifest
 
@@ -353,6 +314,62 @@ wb.register();
 - Test offline functionality thoroughly
 - Monitor cache sizes and implement cleanup
 - Use local Workbox copy for production reliability
+
+## Quick Blazor Wasm Setup Checklist
+| Step | Action                                                                                               | Required?              |
+| ---- | ---------------------------------------------------------------------------------------------------- | ---------------------- |
+| 1    | Add `<ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>` to .csproj | Yes                    |
+| 2    | Create `wwwroot/manifest.webmanifest` with required members                                          | Yes                    |
+| 3    | Add minimal `wwwroot/service-worker.js` for development                                              | Yes                    |
+| 4    | Link manifest in `index.html`: `<link rel="manifest" href="manifest.webmanifest">`                   | Yes                    |
+| 5    | Enable AOT: `<RunAOTCompilation>true</RunAOTCompilation>`                                            | Optional (perf boost)  |
+| 6    | Integrate Workbox for advanced caching       
+
+## Blazor Wasm Project Configuration
+
+### .csproj Properties
+
+Blazor PWA projects use these MSBuild properties for enabling and configuring PWA features.
+
+| Property                              | Type    | Default | Description                                                                                                                          |
+| ------------------------------------- | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `ServiceWorkerAssetsManifest`         | string  | (none)  | Specifies the filename for the generated service worker assets manifest (e.g., `service-worker-assets.js`). Required for PWA builds. |
+| `RunAOTCompilation`                   | boolean | false   | Enables Ahead-of-Time compilation for WebAssembly, improving runtime performance at the cost of larger bundle size.                  |
+| `BlazorWebAssemblyPreserveWhitespace` | boolean | false   | Preserves whitespace in Blazor components for debugging; set to true for development.                                                |
+| `JavaScriptBundlingEnabled`           | boolean | false   | Enables JavaScript bundling with tools like esbuild for optimized builds.                                                            |
+| `OverrideHtmlAssetPlaceholders`       | boolean | false   | Allows customization of HTML asset placeholders in index.html.                                                                       |
+
+**Example**
+```xml
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+    <RunAOTCompilation>true</RunAOTCompilation>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+  </PropertyGroup>
+</Project>
+```
+
+**Notes**
+- Properties are evaluated at build time; changes require rebuild.
+- AOT increases download size by ~2-3x but reduces startup time.
+- In .NET 10, AOT compilation is more efficient and supports additional optimizations.
+
+### Service Worker Item Group
+
+Defines which service worker files are included in the build.
+
+**Example**
+```xml
+<ItemGroup>
+  <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+</ItemGroup>
+```
+
+**Notes**
+- `Include` points to development service worker; `PublishedContent` to production version.
+- Only one ServiceWorker item is supported per project.
 
 ## Build Outputs
 
