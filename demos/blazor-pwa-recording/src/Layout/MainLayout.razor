@@ -4,8 +4,11 @@
 
 <div class="app-shell">
     <header class="glass-panel app-header">
-        <h1>SonicMemo</h1>
-        <OfflineStatusIndicator Status="@_offlineStatus" />
+        <h1 class="app-header__title">SonicMemo</h1>
+        <div class="app-header__actions">
+            <button class="app-header__button" type="button" @onclick="CheckForUpdates">Check updates</button>
+            <OfflineStatusIndicator Status="@_offlineStatus" />
+        </div>
     </header>
     <main>
         @Body
@@ -15,10 +18,20 @@
 <OfflineToast IsVisible="@_showOfflineToast"
               Message="App is ready for offline use."
               OnDismiss="@HideOfflineToast" />
+<OfflineToast IsVisible="@_showUpdateToast"
+              Message="@_updateToastMessage"
+              ActionLabel="@_updateActionLabel"
+              DismissLabel="@_updateDismissLabel"
+              OnAction="@ApplyUpdate"
+              OnDismiss="@HideUpdateToast" />
 
 @code {
     private string _offlineStatus = "downloading";
     private bool _showOfflineToast;
+    private bool _showUpdateToast;
+    private string _updateToastMessage = "Update available.";
+    private string? _updateActionLabel = "Update";
+    private string _updateDismissLabel = "Later";
     private DotNetObjectReference<MainLayout>? _dotNetRef;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -46,10 +59,67 @@
         return InvokeAsync(StateHasChanged);
     }
 
+    [JSInvokable]
+    public Task ShowAppUpdateToast(string? version)
+    {
+        _updateToastMessage = BuildUpdateMessage(version);
+        _updateActionLabel = "Update";
+        _updateDismissLabel = "Later";
+        _showUpdateToast = true;
+        return InvokeAsync(StateHasChanged);
+    }
+
     private Task HideOfflineToast()
     {
         _showOfflineToast = false;
         return InvokeAsync(StateHasChanged);
+    }
+
+    private Task HideUpdateToast()
+    {
+        _showUpdateToast = false;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ApplyUpdate()
+    {
+        _showUpdateToast = false;
+        await JS.InvokeVoidAsync("offlineBridge.requestAppUpdate");
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task CheckForUpdates()
+    {
+        var result = await JS.InvokeAsync<UpdateCheckResult>("offlineBridge.checkForUpdates");
+        if (result.Ok && !result.HasUpdate)
+        {
+            _updateToastMessage = "No updates available.";
+            _updateActionLabel = null;
+            _updateDismissLabel = "OK";
+            _showUpdateToast = true;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private static string BuildUpdateMessage(string? version)
+    {
+        if (string.IsNullOrWhiteSpace(version))
+        {
+            return "Update available. Update to apply.";
+        }
+
+        var trimmed = version.Trim();
+        if (trimmed.Length > 8)
+        {
+            trimmed = trimmed[..8];
+        }
+        return $"Update available (v{trimmed}). Update to apply.";
+    }
+
+    private sealed class UpdateCheckResult
+    {
+        public bool Ok { get; set; }
+        public bool HasUpdate { get; set; }
     }
 
     public ValueTask DisposeAsync()

@@ -52,10 +52,24 @@ if (!self.workbox) {
         return Response.error();
     });
 
+    self.addEventListener('install', (event) => {
+        if (!self.assetsManifest || !self.assetsManifest.version) {
+            return;
+        }
+        event.waitUntil(notifyClients({ type: 'sw-update-available', version: self.assetsManifest.version }));
+    });
+
     self.addEventListener('activate', (event) => {
         event.waitUntil(notifyClientsIfReady());
     });
 }
+
+self.addEventListener('message', (event) => {
+    const data = event.data || {};
+    if (data.type === 'SKIP_WAITING') {
+        event.waitUntil(self.skipWaiting());
+    }
+});
 
 async function notifyClientsIfReady() {
     try {
@@ -70,8 +84,10 @@ async function notifyClientsIfReady() {
 }
 
 async function notifyClients(message) {
-    const clients = await self.clients.matchAll({ type: 'window' });
+    const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     for (const client of clients) {
         client.postMessage(message);
     }
 }
+
+// dummy changes to simulate version bump for testing

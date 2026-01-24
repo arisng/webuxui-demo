@@ -7,9 +7,9 @@
 
 ## **Progress**
 
-- **Progress:** 9/12 Done
+- **Progress:** 9/13 Done
 - **In-Progress:** None
-- **Last Updated:** 2026-01-22
+- **Last Updated:** 2026-01-24
 
 ## **Goals**
 
@@ -39,85 +39,116 @@
   **Priority:** P0  
   **Status:** Done  
   **Issue:** `.docs/issues/260122-feature-setup-wasm-pwa-standalone.md`  
-  **Updated:** 2026-01-22  
+  **Updated:** 2026-01-24  
   **Summary:** Keep current Blazor WASM PWA standalone setup as the baseline before migrating to InteractiveAuto.
 - **ID:** `offline-app-shell-routing`  
   **Title:** Offline App Shell Routing  
   **Priority:** P0  
   **Status:** Done  
   **Issue:** `.docs/issues/260122-feature-offline-app-shell-routing.md`  
-  **Updated:** 2026-01-22  
+  **Updated:** 2026-01-24  
   **Summary:** Service worker intercepts navigation and serves cached `index.html` when offline.
 - **ID:** `offline-status-indicator`  
   **Title:** Offline Status Indicator  
   **Priority:** P1  
   **Status:** Done  
   **Issue:** `.docs/issues/260122-feature-offline-status-indicator.md`  
-  **Updated:** 2026-01-22  
+  **Updated:** 2026-01-24  
   **Summary:** Header icon shows Downloading (grey/blinking), Ready (green), Offline Active (red).
 - **ID:** `offline-readiness-notification`  
   **Title:** Offline Readiness Notification  
   **Priority:** P1  
   **Status:** Done  
   **Issue:** `.docs/issues/260122-feature-offline-readiness-notification.md`  
-  **Updated:** 2026-01-22  
+  **Updated:** 2026-01-24  
   **Summary:** Toast appears once service worker finishes caching WASM/DLL assets: “⚡ App is ready for offline use.”
 - **ID:** `workbox-build-time-precache-migration`  
   **Title:** Workbox Build-Time Precache Migration  
   **Priority:** P2  
   **Status:** Planned  
   **Issue:** TBD  
-  **Updated:** 2026-01-22  
+  **Updated:** 2026-01-24  
   **Summary:** Replace manual/no-build precache with a build-time manifest for automatic cache invalidation.
+- **ID:** `app-update-notification`  
+  **Title:** App Update Notification  
+  **Priority:** P2  
+  **Status:** Planned  
+  **Issue:** `.docs/issues/260124-feature-app-update-notification.md`  
+  **Updated:** 2026-01-24  
+  **Summary:** Prompt users when a new service worker version is available.
 - **ID:** `auto-stop-on-app-switch`  
   **Title:** Auto-Stop on App Switch  
   **Priority:** P1  
   **Status:** Planned  
   **Issue:** TBD  
-  **Updated:** 2026-01-22  
+  **Updated:** 2026-01-24  
   **Summary:** Stop recording on `visibilitychange` to prevent background recording loss.
 - **ID:** `instant-first-load`  
   **Title:** Instant First Load (SSR)  
   **Priority:** P2  
   **Status:** Planned  
   **Issue:** TBD  
-  **Updated:** 2026-01-22  
+  **Updated:** 2026-01-24  
   **Summary:** UI is interactive immediately via server render; WASM downloads in the background.
 - **ID:** `tap-record-tap-stop`  
   **Title:** Recording (Tap-to-Record / Tap-to-Stop)  
   **Priority:** P0  
   **Status:** Done  
   **Issue:** `.docs/issues/260122-feature-tap-record-tap-stop.md`  
-  **Updated:** 2026-01-22  
+  **Updated:** 2026-01-24  
   **Summary:** One tap starts recording, second tap stops and autosaves.
 - **ID:** `mime-type-smart-detection`  
   **Title:** MIME Type Smart Detection  
   **Priority:** P0  
   **Status:** Done  
   **Issue:** `.docs/issues/260122-feature-mime-type-smart-detection.md`  
-  **Updated:** 2026-01-22  
+  **Updated:** 2026-01-24  
   **Summary:** MediaRecorder iterates supported types in order: `audio/webm;codecs=opus`, `audio/mp4`, `audio/webm`, `audio/wav`.
 - **ID:** `local-storage-indexeddb`  
   **Title:** Local Storage (IndexedDB)  
   **Priority:** P0  
   **Status:** Done  
   **Issue:** `.docs/issues/260122-feature-local-storage-indexeddb.md`  
-  **Updated:** 2026-01-22  
+  **Updated:** 2026-01-24  
   **Summary:** DB `AudioStore` with store `Recordings` schema `{ id, blob, timestamp, duration }`.
 - **ID:** `persistence-protection`  
   **Title:** Persistence Protection  
   **Priority:** P0  
   **Status:** Done  
   **Issue:** `.docs/issues/260122-feature-persistence-protection.md`  
-  **Updated:** 2026-01-22  
+  **Updated:** 2026-01-24  
   **Summary:** Call `navigator.storage.persist()` on startup to reduce eviction risk (especially iOS).
 - **ID:** `recordings-list-playback`  
   **Title:** Recordings List & Playback  
   **Priority:** P0  
   **Status:** Done  
   **Issue:** `.docs/issues/260122-feature-recordings-list-playback.md`  
-  **Updated:** 2026-01-22  
+  **Updated:** 2026-01-24  
   **Summary:** List newest-first with play and delete actions.
+
+## **Suggested Next Features**
+
+- **ID:** `storage-quota-visibility`  
+  **Title:** Storage Quota Visibility  
+  **Priority:** P1  
+  **Status:** Suggested  
+  **Issue:** TBD  
+  **Updated:** 2026-01-24  
+  **Summary:** Show remaining storage estimate and warn when nearing quota.
+- **ID:** `recording-rename`  
+  **Title:** Recording Rename  
+  **Priority:** P2  
+  **Status:** Suggested  
+  **Issue:** TBD  
+  **Updated:** 2026-01-24  
+  **Summary:** Allow quick rename/edit of recording title in the list.
+- **ID:** `export-share-recording`  
+  **Title:** Export / Share Recording  
+  **Priority:** P2  
+  **Status:** Suggested  
+  **Issue:** TBD  
+  **Updated:** 2026-01-24  
+  **Summary:** Download or share a recording via Web Share API when available.
 
 ## **UI/UX Baseline**
 

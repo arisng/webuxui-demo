@@ -9,7 +9,11 @@
         <div class="toast-pill__content">
             <span class="toast-pill__message">@Message</span>
         </div>
-        <button type="button" class="toast-pill__dismiss" @onclick="OnDismiss">Dismiss</button>
+        @if (!string.IsNullOrWhiteSpace(ActionLabel))
+        {
+            <button type="button" class="toast-pill__action" @onclick="OnAction">@ActionLabel</button>
+        }
+        <button type="button" class="toast-pill__dismiss" @onclick="OnDismiss">@DismissLabel</button>
     </div>
 }
 
@@ -22,4 +26,13 @@
 
     [Parameter]
     public EventCallback OnDismiss { get; set; }
+
+    [Parameter]
+    public string DismissLabel { get; set; } = "Dismiss";
+
+    [Parameter]
+    public string? ActionLabel { get; set; }
+
+    [Parameter]
+    public EventCallback OnAction { get; set; }
 }

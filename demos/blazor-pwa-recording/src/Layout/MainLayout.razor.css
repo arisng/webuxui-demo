@@ -1,6 +1,6 @@
 header.glass-panel {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
     font-family: 'Space Grotesk', sans-serif;
@@ -10,10 +10,56 @@ header.glass-panel {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+.app-header__title {
     font-size: 2rem;
     font-weight: 700;
     color: var(--text-color);
     margin: 0;
-    text-align: center;
+    text-align: left;
+}
+
+.app-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.app-header__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(59, 130, 246, 0.18);
+    border: 1px solid rgba(59, 130, 246, 0.45);
+    color: var(--text-color);
+    border-radius: 999px;
+    padding: 8px 16px;
+    min-height: 40px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.app-header__button:hover {
+    background: rgba(59, 130, 246, 0.3);
+    border-color: rgba(59, 130, 246, 0.75);
+    transform: translateY(-1px);
+}
+
+.app-header__button:focus-visible {
+    outline: 2px solid rgba(148, 163, 184, 0.6);
+    outline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+    header.glass-panel {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .app-header__title {
+        text-align: center;
+    }
 }
