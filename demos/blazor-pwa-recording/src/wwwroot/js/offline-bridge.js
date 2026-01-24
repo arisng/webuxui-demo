@@ -52,7 +52,8 @@
         pendingReadyVersion = null;
         emitStatus();
         if (dotNetRef && shouldShowToast(version)) {
-            dotNetRef.invokeMethodAsync("ShowOfflineReadyToast");
+            dotNetRef.invokeMethodAsync("ShowOfflineReadyToast")
+                .catch((error) => console.error("Offline toast failed", error));
         }
     };
 
