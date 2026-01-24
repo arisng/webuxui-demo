@@ -112,17 +112,35 @@ Solution: Ensure you are running the **published** version of the app. Developme
 **Problem: Camera/Microphone access denied over HTTP**  
 Solution: Browsers restrict powerful APIs like the MediaStream API to secure contexts. Use the **Docker (HTTPS)** method or test via `localhost`.
 
+## Simulate a service worker update (local)
+
+Use these steps when you need to trigger the app update prompt.
+
+1. **Make a change** that will alter the service worker or its precache manifest:
+   - Edit `src/wwwroot/service-worker.published.js`, or
+   - Change any static asset (CSS/JS/HTML) that ends up in `wwwroot`.
+2. **Publish again** so the build regenerates `service-worker-assets.js` and updates the version:
+   ```bash
+   dotnet publish -c Release
+   ```
+3. **Serve the published output** (same as above) and open the app once.
+4. **Reopen or reload** the app to see the update prompt appear.
+
+Notes:
+- In debug/dev, `service-worker.js` is a no-op. Updates only work in **published** builds.
+- A “changed service worker” means the SW file bytes or the precache manifest/version changed between publishes.
+
 ## Variations
 
 ### Testing on Mobile via Chrome Port Forwarding
 
 If you want to test PWA features on an Android device without setting up HTTPS, you can use Chrome's Port Forwarding. This allows the mobile device to access the app via `localhost:8080`, which browsers treat as a Secure Context.
 
-See the [Chrome Port Forwarding Guide](./chrome-port-forwarding.md) for detailed steps.
+See the [Chrome Port Forwarding Guide](./how-to-use-chrome-port-forwarding.md) for detailed steps.
 
 ## Related guides
 
-- [How to use Chrome Port Forwarding](./chrome-port-forwarding.md)
+- [How to use Chrome Port Forwarding](./how-to-use-chrome-port-forwarding.md)
 - [Tutorial: Getting started with Blazor PWA](../../tutorials/getting-started.md)
 - [Reference: Service Worker Configuration](../../reference/service-worker-config.md)
 
