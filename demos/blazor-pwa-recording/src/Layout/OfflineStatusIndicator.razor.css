@@ -2,6 +2,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
+    line-height: 1;
     font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.1em;
@@ -15,6 +16,7 @@
     border-radius: 999px;
     background: #94a3b8;
     box-shadow: 0 0 0 0 rgba(148, 163, 184, 0.4);
+    display: inline-block;
 }
 
 .offline-indicator--downloading .offline-indicator__dot {
@@ -38,12 +40,8 @@
 
 .offline-indicator__label {
     white-space: nowrap;
-}
-
-@media (max-width: 520px) {
-    .offline-indicator__label {
-        display: none;
-    }
+    display: inline-flex;
+    align-items: center;
 }
 
 @keyframes offlinePulse {
