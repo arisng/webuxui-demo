@@ -34,7 +34,4 @@ The MEP is kept in `.docs/issues/260122-blazor-recording-pwa-poc-mep.md` and is 
 - Update the MEP with status + link to the issue + completion notes.
 - Repeat for the next feature.
 
-### Current spec files
-
-- MEP (living spec): `.docs/issues/260122-blazor-recording-pwa-poc-mep.md`
 

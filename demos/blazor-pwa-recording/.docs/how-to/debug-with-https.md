@@ -108,11 +108,11 @@ When using self-signed certificates, browsers will show security warnings. For d
 
 ## Platform Differences
 
-| Platform | Certificate Handling | Solution |
-|----------|---------------------|----------|
-| Windows | Native certificate store integration | Standard `dotnet dev-certs https --trust` |
-| macOS | Native certificate store integration | Standard `dotnet dev-certs https --trust` |
-| Linux/WSL | File-based certificate store | Use file-based certificates (recommended) |
+| Platform  | Certificate Handling                 | Solution                                  |
+| --------- | ------------------------------------ | ----------------------------------------- |
+| Windows   | Native certificate store integration | Standard `dotnet dev-certs https --trust` |
+| macOS     | Native certificate store integration | Standard `dotnet dev-certs https --trust` |
+| Linux/WSL | File-based certificate store         | Use file-based certificates (recommended) |
 
 ## Related
 
